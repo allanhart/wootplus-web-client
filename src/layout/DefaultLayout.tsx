@@ -4,7 +4,8 @@ import Head from 'next/head';
 import Container from "@mui/material/Container";
 
 import ApplicationBar from "components/ApplicationBar";
-
+import Copyright from "components/Copyright";
+import ProTip from "components/ProTip";
 
 import styles from './DefaultLayout.module.scss';
 
@@ -25,6 +26,9 @@ export default function Layout({ children, pageTitle }: {
 
       <Container className={styles.appContainer}>
         {children}
+
+        <ProTip />
+        <Copyright />
       </Container>
     </>
   );

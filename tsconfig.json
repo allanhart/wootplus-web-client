@@ -9,6 +9,7 @@
     "incremental": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "jsxImportSource": "@emotion/react",
     "lib": ["dom", "dom.iterable", "esnext"],
     "module": "esnext",
     "moduleResolution": "node",
@@ -22,16 +23,9 @@
     "removeComments": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true,
     "strict": true,
     "target": "es5"
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

@@ -1,7 +1,15 @@
 {
   "name": "nextjs-with-typescript",
-  "version": "5.0.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export && touch out/.nojekyll",
+    "start": "next start",
+    "deploy": "gh-pages -t -d out",
+    "lint": "next lint",
+    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+  },
   "dependencies": {
     "@emotion/cache": "latest",
     "@emotion/react": "latest",
@@ -9,32 +17,19 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
-    "@types/aos": "latest",
-    "aos": "latest",
+    "@next/font": "latest",
     "clsx": "latest",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "sharp": "latest"
-  },
-  "scripts": {
-    "dev": "next",
-    "build": "next build && next export && touch out/.nojekyll",
-    "start": "next start",
-    "deploy": "gh-pages -t -d out",
-    "post-update": "echo \"codesandbox preview only, need an update\" && yarn upgrade --latest"
+    "sass": "latest"
   },
   "devDependencies": {
-    "@fullhuman/postcss-purgecss": "latest",
-    "@svgr/webpack": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "eslint": "7.14.0",
+    "eslint-config-next": "latest",
     "gh-pages": "latest",
-    "postcss-flexbugs-fixes": "latest",
-    "postcss-preset-env": "latest",
-    "sass": "latest",
-    "serve": "latest",
     "typescript": "latest"
   }
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
@@ -10,14 +11,24 @@ const Anchor = styled('a')({});
 
 interface NextLinkComposedProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'>,
-    Omit<NextLinkProps, 'href' | 'as' | 'onClick' | 'onMouseEnter'> {
+    Omit<NextLinkProps, 'href' | 'as' | 'passHref' | 'onMouseEnter' | 'onClick' | 'onTouchStart'> {
   to: NextLinkProps['href'];
   linkAs?: NextLinkProps['as'];
 }
 
 export const NextLinkComposed = React.forwardRef<HTMLAnchorElement, NextLinkComposedProps>(
   function NextLinkComposed(props, ref) {
-    const { to, linkAs, replace, scroll, shallow, prefetch, locale, ...other } = props;
+    const {
+      to,
+      linkAs,
+      replace,
+      scroll,
+      shallow,
+      prefetch,
+      legacyBehavior = true,
+      locale,
+      ...other
+    } = props;
 
     return (
       <NextLink
@@ -29,6 +40,7 @@ export const NextLinkComposed = React.forwardRef<HTMLAnchorElement, NextLinkComp
         shallow={shallow}
         passHref
         locale={locale}
+        legacyBehavior={legacyBehavior}
       >
         <Anchor ref={ref} {...other} />
       </NextLink>
@@ -53,6 +65,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props,
     as,
     className: classNameProps,
     href,
+    legacyBehavior,
     linkAs: linkAsProp,
     locale,
     noLinkStyle,
@@ -75,14 +88,23 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props,
 
   if (isExternal) {
     if (noLinkStyle) {
-      return <Anchor className={className} href={href} ref={ref} {...other} />;
+      return <Anchor className={className} href={href as string} ref={ref} {...other} />;
     }
 
-    return <MuiLink className={className} href={href} ref={ref} {...other} />;
+    return <MuiLink className={className} href={href as string} ref={ref} {...other} />;
   }
 
   const linkAs = linkAsProp || as;
-  const nextjsProps = { to: href, linkAs, replace, scroll, shallow, prefetch, locale };
+  const nextjsProps = {
+    to: href,
+    linkAs,
+    replace,
+    scroll,
+    shallow,
+    prefetch,
+    legacyBehavior,
+    locale,
+  };
 
   if (noLinkStyle) {
     return <NextLinkComposed className={className} ref={ref} {...nextjsProps} {...other} />;
