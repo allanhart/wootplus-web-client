@@ -11,7 +11,7 @@ import ProTip from "components/ProTip";
 import styles from './DefaultLayout.module.scss';
 
 
-export default function Layout({ children, pageTitle }: {
+export default function DefaultLayout({ children, pageTitle }: {
   children: ReactElement,
   pageTitle: string
 }) {
