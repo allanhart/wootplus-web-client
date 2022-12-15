@@ -5,23 +5,18 @@ import Button from '@mui/material/Button';
 
 import Link from 'components/Link';
 
+import paths from 'paths';
+
 export default function About() {
   return (
     <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Box my={4} display="flex" flexDirection="column" justifyContent="center" alignItems="center">
         <Typography variant="h4" component="h1" gutterBottom>
-          MUI v5 + Next.js with TypeScript example
+          About this template
         </Typography>
+
         <Box maxWidth="sm">
-          <Button variant="contained" component={Link} noLinkStyle href="/">
+          <Button variant="contained" component={Link} noLinkStyle href={paths.index}>
             Go to the home page
           </Button>
         </Box>

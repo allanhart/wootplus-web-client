@@ -1,4 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
+import { useCallback, useState } from 'react';
 
 import Head from 'next/head';
 
@@ -15,6 +16,8 @@ import theme from 'style/theme';
 
 import DefaultLayout from 'layout/DefaultLayout';
 
+import AppContext, { AppContextInterface } from "AppContext";
+
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
@@ -28,12 +31,28 @@ interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
+
 export default function MyApp(props: MyAppProps) {
   const {
     Component,
     emotionCache = clientSideEmotionCache,
     pageProps
   } = props;
+
+  const [loadProgress, setLoadProgress] = useState(null);
+
+  const updateAppContext = useCallback((context:AppContextInterface) => {
+    Object.keys(context).forEach((key) => {
+      const value = context[key];
+      switch (key) {
+        case 'loadProgress':
+          setLoadProgress(value);
+          break;
+        default:
+          throw new Error(`Unexpected context key/value pair: (${key}=${value})`);
+      }
+    });
+  }, []);
 
   const getLayout = Component.getLayout ?? ((page) => (
     <DefaultLayout
@@ -49,12 +68,17 @@ export default function MyApp(props: MyAppProps) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
 
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
+      <AppContext.Provider value={{
+        loadProgress,
+        update: updateAppContext,
+      }}>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
 
-        {getLayout(<Component {...pageProps} />)}
-      </ThemeProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </ThemeProvider>
+      </AppContext.Provider>
     </CacheProvider>
   );
 }

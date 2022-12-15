@@ -1,28 +1,37 @@
-import clsx from 'clsx';
-
-import React, { ReactElement } from 'react';
+import { useContext, ReactElement } from 'react';
 
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
+
+import Slide from '@mui/material/Slide';
 import Toolbar from "@mui/material/Toolbar";
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { Breakpoint } from '@mui/system';
 
-import styles from "./ApplicationBar.module.scss";
+import ApplicationMenuButton from "./ApplicationMenuButton";
 
+import AppContext from "AppContext";
+
+const LINEAR_PROGRESS_STYLES = {
+  bottom: 0,
+  height: 3,
+  position: 'absolute',
+  width: '100%',
+};
 
 function PersistentAppBar({ children }: {
-  children: React.ReactNode,
+  children: ReactElement,
 }): ReactElement {
-  const opaque = useScrollTrigger({
-    threshold: 30,
-    disableHysteresis: true,
+  const trigger = useScrollTrigger({
+    threshold: 100,
+    // disableHysteresis: true,
   });
 
   return (
-    <div className={clsx(styles.appbar, opaque ? styles.appbarOpaque : null)}>
+    <Slide appear={false} direction="down" in={!trigger}>
       {children}
-    </div>
+    </Slide>
   );
 }
 
@@ -30,21 +39,35 @@ function PersistentAppBar({ children }: {
 export default function ApplicationBar({ maxContainerWidth }: {
   maxContainerWidth?: Breakpoint,
 }): ReactElement {
+  const context = useContext(AppContext);
+  const loadProgress = context?.loadProgress;
+
+  let progressBar = null;
+  if (loadProgress !== null) {
+    const progressBarProps: LinearProgressProps = {sx: LINEAR_PROGRESS_STYLES};
+
+    if (loadProgress !== undefined) {
+      progressBarProps.value = loadProgress;
+      progressBarProps.variant = 'determinate';
+    }
+
+    progressBar = (
+      <LinearProgress {...progressBarProps} />
+    );
+  }
+
+
   return (
     <PersistentAppBar>
-        <AppBar>
-          <Container maxWidth={maxContainerWidth}>
-            <Toolbar disableGutters className={styles.toolbar}>
+      <AppBar color="default" elevation={1}>
+        <Container maxWidth={maxContainerWidth}>
+          <Toolbar disableGutters>
+            <ApplicationMenuButton />
+          </Toolbar>
+        </Container>
 
-            </Toolbar>
-          </Container>
-        </AppBar>
+        {progressBar}
+      </AppBar>
     </PersistentAppBar>
   );
 }
-
-// {NAV_LINK_ARRANGEMENT.map((linkInfo, index) => ({
-//   <NextLink key={index} href={linkInfo.path}>
-//     <a>{linkInfo.label}</a>
-//   </NextLink>
-// }))}
