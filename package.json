@@ -1,7 +1,8 @@
 {
-  "name": "nextjs-with-typescript",
+  "name": "@allanhart/mui5-nextjs-typescript",
   "version": "1.0.0",
   "private": false,
+  "license": "mit",
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export && touch out/.nojekyll",
