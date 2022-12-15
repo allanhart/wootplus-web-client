@@ -20,8 +20,6 @@ import paths from 'paths';
 
 export default function ApplicationMenuButton(): ReactElement {
   const router = useRouter();
-  console.log(router.pathname);
-
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navLinkArrangement] = useState([
