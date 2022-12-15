@@ -53,7 +53,9 @@ export default function ApplicationMenuButton(): ReactElement {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         PaperProps={{
-          sx: { paddingTop: 7, width: 240 },
+          sx: {
+            paddingTop: { xs: 7, sm: 8 },
+          },
         }}
       >
         <MenuList disablePadding>
@@ -67,7 +69,7 @@ export default function ApplicationMenuButton(): ReactElement {
                 key={label}
                 onClick={handleMenuItemClick}
                 selected={path === router.pathname}
-                sx={{ minWidth: 220 }}
+                sx={{ width: 220, py: 2 }}
               >
                 <ListItemIcon>
                   {icon}

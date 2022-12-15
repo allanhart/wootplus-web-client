@@ -43,7 +43,7 @@ function PersistentAppBar({ children }: {
 
 
 export default function ApplicationBar({ maxContainerWidth }: {
-  maxContainerWidth?: Breakpoint,
+  maxContainerWidth?: Breakpoint|false,
 }): ReactElement {
   const context = useContext(AppContext);
   const loadProgress = context?.loadProgress;

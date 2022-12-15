@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 import Head from 'next/head';
 
+import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 
 
@@ -8,7 +9,7 @@ import ApplicationBar from "components/ApplicationBar";
 import Copyright from "components/Copyright";
 import ProTip from "components/ProTip";
 
-import styles from './DefaultLayout.module.scss';
+// import styles from './DefaultLayout.module.scss';
 
 
 export default function DefaultLayout({ children, pageTitle }: {
@@ -23,13 +24,16 @@ export default function DefaultLayout({ children, pageTitle }: {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
 
-      <ApplicationBar />
+      <ApplicationBar maxContainerWidth={false} />
 
-      <Container className={styles.appContainer}>
-        {children}
+      <Container>
+        <Box py={{ xs: 7, sm: 8 }}>
+          {children}
 
-        <ProTip />
-        <Copyright />
+          <ProTip />
+          <Copyright />
+
+        </Box>
       </Container>
     </>
   );
