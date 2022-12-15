@@ -1,12 +1,85 @@
+import { ReactElement, useState } from 'react';
+import { useRouter } from 'next/router'
+
 import Button from "@mui/material/Button";
+import Drawer from '@mui/material/Drawer';
+
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+
+import Link from 'components/Link';
 
 import AppLogo from 'media/app-logo.svg';
 
+import paths from 'paths';
 
-export default function ApplicationMenuButton() {
+
+export default function ApplicationMenuButton(): ReactElement {
+  const router = useRouter();
+  console.log(router.pathname);
+
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [navLinkArrangement] = useState([
+    {
+      icon: <HomeIcon />,
+      label: 'Home',
+      path: paths.index,
+    },
+    {
+      icon: <InfoIcon />,
+      label: 'About',
+      path: paths.about,
+    },
+  ]);
+
+  const handleMenuItemClick = () => {
+    setDrawerOpen(false);
+  };
+
   return (
-    <Button color="inherit" sx={{ width: 140 }}>
-      <AppLogo />
-    </Button>
+    <>
+      <Button
+        color="inherit"
+        onClick={() => setDrawerOpen(!drawerOpen)}
+        sx={{ width: 140 }}
+      >
+        <AppLogo />
+      </Button>
+
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        PaperProps={{
+          sx: { paddingTop: 7, width: 240 },
+        }}
+      >
+        <MenuList disablePadding>
+          {navLinkArrangement.map((linkInfo) => {
+            const { icon, label, path } = linkInfo;
+
+            return (
+              <MenuItem
+                component={Link}
+                href={path}
+                key={label}
+                onClick={handleMenuItemClick}
+                selected={path === router.pathname}
+                sx={{ minWidth: 220 }}
+              >
+                <ListItemIcon>
+                  {icon}
+                </ListItemIcon>
+                <ListItemText primary={label} />
+              </MenuItem>
+            );
+          })}
+        </MenuList>
+      </Drawer>
+    </>
   );
 }

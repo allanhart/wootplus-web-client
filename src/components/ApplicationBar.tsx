@@ -68,7 +68,7 @@ export default function ApplicationBar({ maxContainerWidth }: {
       <StyledAppBar color="default" elevation={1}>
         <Container maxWidth={maxContainerWidth}>
           <Toolbar disableGutters>
-            <ApplicationMenuButton urlPath="/" />
+            <ApplicationMenuButton />
           </Toolbar>
         </Container>
 
