@@ -8,6 +8,8 @@ import { AppProps } from 'next/app';
 
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -20,6 +22,8 @@ import AppContext, { AppContextInterface } from "AppContext";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
+
+const queryClient = new QueryClient();
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode,
@@ -63,22 +67,24 @@ export default function MyApp(props: MyAppProps) {
   ));
 
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
+    <QueryClientProvider client={queryClient}>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
 
-      <AppContext.Provider value={{
-        loadProgress,
-        update: updateAppContext,
-      }}>
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
+        <AppContext.Provider value={{
+          loadProgress,
+          update: updateAppContext,
+        }}>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
 
-          {getLayout(<Component {...pageProps} />)}
-        </ThemeProvider>
-      </AppContext.Provider>
-    </CacheProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </ThemeProvider>
+        </AppContext.Provider>
+      </CacheProvider>
+    </QueryClientProvider>
   );
 }

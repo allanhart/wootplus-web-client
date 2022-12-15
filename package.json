@@ -20,11 +20,11 @@
     "@mui/material": "latest",
     "@next/font": "latest",
     "@svgr/webpack": "latest",
-    "clsx": "latest",
     "named-urls": "^2.0.1",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-query": "latest",
     "sass": "latest"
   },
   "devDependencies": {
