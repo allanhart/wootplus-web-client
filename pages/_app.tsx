@@ -9,6 +9,8 @@ import { AppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+ import { ReactQueryDevtools } from 'react-query/devtools';
+
 
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,7 +25,13 @@ import AppContext, { AppContextInterface } from "AppContext";
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // refetchOnWindowFocus: false,
+    },
+  },
+});
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode,
@@ -67,7 +75,11 @@ export default function MyApp(props: MyAppProps) {
   ));
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider
+      client={queryClient}
+    >
+      <ReactQueryDevtools initialIsOpen={false} />
+
       <CacheProvider value={emotionCache}>
         <Head>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
