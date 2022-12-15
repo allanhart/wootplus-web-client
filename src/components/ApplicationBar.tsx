@@ -1,6 +1,7 @@
 import { useContext, ReactElement } from 'react';
+import { styled, Theme } from "@mui/material/styles";
 
-import AppBar from "@mui/material/AppBar";
+import AppBar, { AppBarProps } from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 
@@ -19,6 +20,11 @@ const LINEAR_PROGRESS_STYLES = {
   position: 'absolute',
   width: '100%',
 };
+
+const StyledAppBar = styled(AppBar)<AppBarProps>(({ theme }: { theme: Theme }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+}));
+
 
 function PersistentAppBar({ children }: {
   children: ReactElement,
@@ -59,15 +65,15 @@ export default function ApplicationBar({ maxContainerWidth }: {
 
   return (
     <PersistentAppBar>
-      <AppBar color="default" elevation={1}>
+      <StyledAppBar color="default" elevation={1}>
         <Container maxWidth={maxContainerWidth}>
           <Toolbar disableGutters>
-            <ApplicationMenuButton />
+            <ApplicationMenuButton urlPath="/" />
           </Toolbar>
         </Container>
 
         {progressBar}
-      </AppBar>
+      </StyledAppBar>
     </PersistentAppBar>
   );
 }
