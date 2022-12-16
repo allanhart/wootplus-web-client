@@ -66,8 +66,8 @@ export default function ApplicationBar({ maxContainerWidth }: {
   return (
     <PersistentAppBar>
       <StyledAppBar color="default" elevation={1}>
-        <Container maxWidth={maxContainerWidth}>
-          <Toolbar disableGutters>
+        <Container maxWidth={maxContainerWidth} disableGutters>
+          <Toolbar disableGutters sx={{ px: 1 }}>
             <ApplicationMenuButton />
           </Toolbar>
         </Container>

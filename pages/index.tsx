@@ -1,3 +1,4 @@
+import { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
 import Box from '@mui/material/Box';
@@ -7,26 +8,39 @@ import Typography from '@mui/material/Typography';
 import Link from 'components/Link';
 
 import paths from 'paths';
+import AppContext from "AppContext";
+
+import { getWootItems } from 'io';
 
 export default function Home() {
-   const { isLoading, error, data } = useQuery('repoData', () =>
-     fetch('https://api.github.com/repos/tannerlinsley/react-query').then(
-       (res) => res.json()
-     ));
+  const context = useContext(AppContext);
+  const updateContext = context?.update;
 
-   if (isLoading) {
-     return <Typography>Loading...</Typography>
-   }
+  const {
+    isLoading,
+    error,
+    // data
+  } = useQuery(['getWootItems', {
+   url: 'https://www.woot.com/feeds/GetNextDiscoverFeedPage?NextUrl=feed/sellout.woot.cloudsearch?skip=0%26top=500'
+  }], getWootItems);
 
-   if (error) {
-     return (
-       <Typography>
-         An error has occurred: {error.toString()}
-       </Typography>
-     );
-   }
 
-  console.log(data);
+  useEffect(() => {
+    updateContext({ loadProgress: isLoading ? undefined : null });
+  }, [isLoading, updateContext]);
+
+
+  if (isLoading) {
+    return <Typography>Loading...</Typography>
+  }
+
+  if (error) {
+    return (
+    <Typography>
+      An error has occurred: {error.toString()}
+    </Typography>
+    );
+  }
 
   return (
     <Container maxWidth="lg">

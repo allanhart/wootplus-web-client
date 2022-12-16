@@ -9,7 +9,7 @@ import { AppProps } from 'next/app';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
- import { ReactQueryDevtools } from 'react-query/devtools';
+// import { ReactQueryDevtools } from 'react-query/devtools';
 
 
 import { ThemeProvider } from '@mui/material/styles';
@@ -29,6 +29,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // refetchOnWindowFocus: false,
+      staleTime: 5000,
     },
   },
 });
@@ -78,7 +79,7 @@ export default function MyApp(props: MyAppProps) {
     <QueryClientProvider
       client={queryClient}
     >
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/*<ReactQueryDevtools initialIsOpen={false} />*/}
 
       <CacheProvider value={emotionCache}>
         <Head>

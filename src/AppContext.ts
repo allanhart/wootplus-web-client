@@ -2,15 +2,12 @@ import React from 'react';
 
 export interface AppContextInterface extends Record<string, any> {
   loadProgress: number|undefined|null,
-  update: Function|null,
+  update: Function,
 }
 
-const AppContext = React.createContext<AppContextInterface | null>(null);
+const AppContext = React.createContext<AppContextInterface>({
+  loadProgress: null,
+  update: () => {},
+});
 
 export default AppContext;
-
-
-// export default React.createContext({
-//   loadProgress: null,
-//   update: null,
-// });

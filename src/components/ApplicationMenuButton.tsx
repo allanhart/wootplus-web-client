@@ -13,7 +13,7 @@ import InfoIcon from '@mui/icons-material/Info';
 
 import Link from 'components/Link';
 
-import AppLogo from 'media/app-logo.svg';
+import AppLogo from 'media/woot-logo.svg';
 
 import paths from 'paths';
 
@@ -44,9 +44,8 @@ export default function ApplicationMenuButton(): ReactElement {
       <Button
         color="inherit"
         onClick={() => setDrawerOpen(!drawerOpen)}
-        sx={{ width: 140 }}
       >
-        <AppLogo />
+        <AppLogo height={40} />
       </Button>
 
       <Drawer
