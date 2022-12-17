@@ -21,7 +21,7 @@ export default function Home() {
     error,
     // data
   } = useQuery(['getWootItems', {
-   url: 'https://www.woot.com/feeds/GetNextDiscoverFeedPage?NextUrl=feed/sellout.woot.cloudsearch?skip=0%26top=500'
+   url: 'http://localhost:8000/woot-items/'
   }], getWootItems);
 
 
