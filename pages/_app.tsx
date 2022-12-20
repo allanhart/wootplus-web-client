@@ -28,7 +28,7 @@ const clientSideEmotionCache = createEmotionCache();
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // refetchOnWindowFocus: false,
+      refetchOnWindowFocus: false,
       // staleTime: 0,
     },
   },

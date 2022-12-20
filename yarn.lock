@@ -2761,7 +2761,7 @@ flatted@^2.0.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-2.0.2.tgz#4575b21e2bcee7434aa9be662f4b7b5f9c2b5138"
   integrity sha512-r5wGx7YeOwNWNlCA0wQ86zKyDLMQr+/RB8xy74M4hTphfmjlijTSSXGuH8rnvKZnfT9i+75zmd8jcKdMR4O6jA==
 
-forerunnerdb@^2.0.22:
+forerunnerdb@latest:
   version "2.0.22"
   resolved "https://registry.yarnpkg.com/forerunnerdb/-/forerunnerdb-2.0.22.tgz#3592912e28f16dd21941b67beeffa59e59c5e6ea"
   integrity sha512-QbVlT0sq4g2NOXUj28W1xoeVEN8pyw7vnHb3Q49W9ukDdSt5N1MmHupWKTAtaMYGzQMBgM08ThHH1xUytd7sCw==

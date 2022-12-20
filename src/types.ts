@@ -1,3 +1,6 @@
 export interface WootItem {
-  id: number,
+  photo_url: string,
+  title: string,
+  url: string,
+  uuid: string,
 }
