@@ -1,15 +1,10 @@
 import { ReactElement } from "react";
 import Head from 'next/head';
 
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 
-
 import ApplicationBar from "components/ApplicationBar";
-import Copyright from "components/Copyright";
-import ProTip from "components/ProTip";
-
-// import styles from './DefaultLayout.module.scss';
+import ApplicationFooter from "components/ApplicationFooter";
 
 
 export default function DefaultLayout({ children, pageTitle }: {
@@ -26,15 +21,18 @@ export default function DefaultLayout({ children, pageTitle }: {
 
       <ApplicationBar maxContainerWidth={false} />
 
-      <Container>
-        <Box py={{ xs: 7, sm: 8 }}>
-          {children}
-
-          <ProTip />
-          <Copyright />
-
-        </Box>
+      <Container
+        component="main"
+        disableGutters
+        sx={{
+          pt: { xs: 7, sm: 8 },
+          pb: 8,
+        }}
+      >
+        {children}
       </Container>
+
+      <ApplicationFooter />
     </>
   );
 }

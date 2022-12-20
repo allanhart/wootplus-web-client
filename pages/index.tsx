@@ -1,58 +1,77 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+// import Avatar from '@mui/material/Avatar';
+import Box from "@mui/material/Box";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Skeleton from '@mui/material/Skeleton';
 
-import Link from 'components/Link';
+// import Link from 'components/Link';
+// import paths from 'paths';
 
-import paths from 'paths';
 import AppContext from "AppContext";
 
-import { getWootItems } from 'io';
+import DataManager from "io/DataManager";
+import { getWootItems } from 'io/queries';
 
 export default function Home() {
   const context = useContext(AppContext);
   const updateContext = context?.update;
 
+  const [ready, setReady] = useState(false);
+
   const {
-    isLoading,
-    error,
+    // isLoading,
+    // error,
     // data
   } = useQuery(['getWootItems', {
    url: 'http://localhost:8000/woot-items/'
   }], getWootItems);
 
+  useEffect(() => {
+    DataManager.getInstance().sync({
+      onComplete: () => {
+        // setReady(true);
+      }
+    });
+  }, []);
+
 
   useEffect(() => {
-    updateContext({ loadProgress: isLoading ? undefined : null });
-  }, [isLoading, updateContext]);
+    // updateContext({ loadProgress: ready ? null : undefined });
+  }, [ready, updateContext]);
 
+  let listItems = [];
 
-  if (isLoading) {
-    return <Typography>Loading...</Typography>
-  }
+  if (ready) {
 
-  if (error) {
-    return (
-    <Typography>
-      An error has occurred: {error.toString()}
-    </Typography>
-    );
+    listItems.push([
+      <ListItem key={0}>
+        <ListItemText primary="Item title" />
+      </ListItem>
+    ]);
+  } else {
+    for (let i=0; i < 24; ++i) {
+      listItems.push(
+        <ListItem key={i} divider sx={{ py: 2 }}>
+          <ListItemAvatar>
+            <Skeleton variant="circular" width={40} height={40} />
+          </ListItemAvatar>
+          <Box flex={1} display="flex" flexDirection="column" gap={1}>
+            <Skeleton variant="rounded" height={15} />
+            <Skeleton variant="rounded" height={15} width="50%" />
+          </Box>
+        </ListItem>
+      );
+    }
   }
 
   return (
-    <Container maxWidth="lg">
-      <Box my={4} display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-        <Typography variant="h4" component="h1" gutterBottom>
-          MUI v5 + Next.js + TypeScript
-        </Typography>
-
-        <Link href={paths.about} color="secondary">
-          Go to the about page
-        </Link>
-      </Box>
-    </Container>
+    <List disablePadding>
+      {/*{listItems}*/}
+    </List>
   );
 }
