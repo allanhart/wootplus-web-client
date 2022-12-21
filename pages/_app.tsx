@@ -2,6 +2,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 
 import Head from 'next/head';
+import Script from 'next/script'
 
 import type { NextPage } from 'next';
 import { AppProps } from 'next/app';
@@ -76,28 +77,30 @@ export default function MyApp(props: MyAppProps) {
   ));
 
   return (
-    <QueryClientProvider
-      client={queryClient}
-    >
-      {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+    <>
+      <Script src="/js/lib/ForerunnerDB-2.0.22/fdb-core+persist.min.js" />
 
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
+      <QueryClientProvider client={queryClient}>
+        {/*<ReactQueryDevtools initialIsOpen={false} />*/}
 
-        <AppContext.Provider value={{
-          loadProgress,
-          update: updateAppContext,
-        }}>
-          <ThemeProvider theme={theme}>
-            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
+        <CacheProvider value={emotionCache}>
+          <Head>
+            <meta name="viewport" content="initial-scale=1, width=device-width" />
+          </Head>
 
-            {getLayout(<Component {...pageProps} />)}
-          </ThemeProvider>
-        </AppContext.Provider>
-      </CacheProvider>
-    </QueryClientProvider>
+          <AppContext.Provider value={{
+            loadProgress,
+            update: updateAppContext,
+          }}>
+            <ThemeProvider theme={theme}>
+              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+              <CssBaseline />
+
+              {getLayout(<Component {...pageProps} />)}
+            </ThemeProvider>
+          </AppContext.Provider>
+        </CacheProvider>
+      </QueryClientProvider>
+    </>
   );
 }
