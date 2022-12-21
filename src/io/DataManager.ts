@@ -1,19 +1,22 @@
 import { WootItem } from 'types';
-import ForerunnerDB from 'forerunnerdb';
+
 
 class DataManager {
   private static instance: DataManager;
   private db:any;
 
+  /**
+   * The DataManager's constructor should always be private to prevent direct
+   * construction calls with the `new` operator.
+   * @private
+   */
   private constructor() {
-    // The DataManager's constructor should always be private to prevent direct
-    // construction calls with the `new` operator.
-    const fdb = new ForerunnerDB();
+    const fdb = new window.ForerunnerDB();
     this.db = fdb.db('wootplus');
   }
 
 
-  public static getInstance(): DataManager {
+  public static getInstance():DataManager {
     if (!DataManager.instance) {
       DataManager.instance = new DataManager();
     }
