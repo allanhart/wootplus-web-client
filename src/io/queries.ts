@@ -1,15 +1,8 @@
 import { WootItem } from 'types';
 
-import ForerunnerDB from 'forerunnerdb';
-
 import { QueryFunctionContext } from 'react-query';
 
-
-const fdb = new ForerunnerDB();
-const db = fdb.db('wootplus');
-const itemCollection = db.collection("woot-items", {
-  primaryKey: 'uuid',
-});
+import DataManager from "./DataManager";
 
 /**
  * Type the payload passed from our React component into our API function.
@@ -26,23 +19,11 @@ export const syncWootItems = (
   const [, { url }] = params.queryKey;
 
   return new Promise((resolve, reject) => {
-    fetch(url, { method: 'GET' }).then((response) => {
-      if (!response.ok) {
-        return reject(new Error(`Unable to fetch user-account: error ${response.status}`));
-      }
-
-      // Update the internal database with the retrieved items
-      response.json().then((responseData) => {
-        itemCollection.insert(responseData.items, () => {
-          itemCollection.save((saveError:Error) => {
-            if (saveError) {
-              return reject(saveError);
-            }
-
-            resolve(true);
-          });
-        });
-      });
+    // Update the internal database with the retrieved items
+    const dataManager = DataManager.getInstance();
+    dataManager.fetchWootItems(url).then((wootItems) => {
+      dataManager.saveWootItems(wootItems)
+        .then(resolve).catch(reject);
     });
   });
 }
@@ -62,14 +43,7 @@ export const loadWootItems = (
       return resolve([]);
     }
 
-    console.log('loading items');
-    itemCollection.load((err:Error) => {
-      if (err) {
-        return reject(err);
-      }
-
-      const loadedItems = itemCollection.find();
-      resolve(loadedItems);
-    });
+    DataManager.getInstance().loadWootItems()
+      .then(resolve).catch(reject);
   });
 }
