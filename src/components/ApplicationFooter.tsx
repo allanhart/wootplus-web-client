@@ -16,7 +16,7 @@ function ApplicationFooter() {
         borderTopWidth: 1,
         borderTopColor: 'divider',
         borderTopStyle: 'solid',
-        height: (theme) => theme.spacing(8),
+        height: (theme) => theme.spacing(6),
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',

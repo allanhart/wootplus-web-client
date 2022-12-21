@@ -26,7 +26,7 @@ export default function DefaultLayout({ children, pageTitle }: {
         disableGutters
         sx={{
           pt: { xs: 7, sm: 8 },
-          pb: 8,
+          pb: 6,
         }}
       >
         {children}

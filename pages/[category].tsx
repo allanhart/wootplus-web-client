@@ -1,8 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { useQuery } from 'react-query';
 
-import Typography from '@mui/material/Typography';
-
 // import Link from 'components/Link';
 // import paths from 'paths';
 
@@ -34,16 +32,11 @@ export default function Home() {
   }, [isReady, updateContext]);
 
 
-  if (!isReady) {
+  if (!(isReady && loadResult.data)) {
     return <ListPlaceholder/>;
   }
 
-  const wootItems = loadResult.data;
-  if (!wootItems || !wootItems.length) {
-    return <Typography>No Items</Typography>
-  }
-
   return (
-    <WootItemList items={wootItems} />
+    <WootItemList items={loadResult.data} />
   );
 }
