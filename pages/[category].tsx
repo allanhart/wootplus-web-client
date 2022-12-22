@@ -19,7 +19,9 @@ export default function Home() {
 
   const syncResult = useQuery(['syncWootItems', {
    url: 'http://localhost:8000/woot-items/'
-  }], syncWootItems);
+  }], syncWootItems, {
+    // useErrorBoundary: true,
+  });
 
   const loadResult = useQuery(['loadWootItems', {
    isSyncing: syncResult.isLoading,
@@ -31,6 +33,10 @@ export default function Home() {
     updateContext({ loadProgress: isReady ? null : undefined });
   }, [isReady, updateContext]);
 
+
+  if (syncResult.isError) {
+    return "Error retrieving data";
+  }
 
   if (!(isReady && loadResult.data)) {
     return <ListPlaceholder/>;

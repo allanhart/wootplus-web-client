@@ -22,9 +22,13 @@ export const syncWootItems = (
     // Update the internal database with the retrieved items
     const dataManager = DataManager.getInstance();
     dataManager.fetchWootItems(url).then((wootItems) => {
-      dataManager.saveWootItems(wootItems)
-        .then(resolve).catch(reject);
-    });
+      const saveResult = dataManager.saveWootItems(wootItems);
+      if (saveResult) {
+        resolve(saveResult);
+      } else {
+        reject(saveResult);
+      }
+    }).catch(reject);
   });
 }
 

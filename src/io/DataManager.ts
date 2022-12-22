@@ -24,37 +24,36 @@ class DataManager {
     return DataManager.instance;
   }
 
-  public fetchWootItems(url:string) {
-    return new Promise<WootItem[]>((resolve, reject) => {
-      fetch(url, { method: 'GET' }).then((response) => {
-        if (!response.ok) {
-          return reject(new Error(`Unable to fetch data at URL: ${url}`));
-        }
+  public async fetchWootItems(url:string):Promise<WootItem[]> {
+    let response;
+    try {
+      response = await fetch(url, { method: 'GET' });
+    } catch (err) {
+      throw new Error(`Unable to fetch data at URL: ${url}`);
+    }
 
-        // Update the internal database with the retrieved items
-        response.json().then((responseData) => {
-          resolve(responseData.items);
-        }).catch(reject);
-      });
-    });
+    if (!response.ok) {
+      throw new Error(`Invalid response from URL: ${url}`);
+    }
+
+    const responseData = await response.json();
+    return responseData.items;
   }
 
-  public saveWootItems(wootItems:WootItem[]) {
-    return new Promise<boolean>((resolve, reject) => {
-      const itemCollection = this.db.collection("woot-items", {
-        primaryKey: 'uuid',
-      });
+  public saveWootItems(wootItems:WootItem[]):boolean {
+    const itemCollection = this.db.collection("woot-items", {
+      primaryKey: 'uuid',
+    });
 
-      itemCollection.insert(wootItems, () => {
-        itemCollection.save((saveError:Error) => {
-          if (saveError) {
-            return reject(saveError);
-          }
-
-          resolve(true);
-        });
+    itemCollection.insert(wootItems, () => {
+      itemCollection.save((saveError:Error) => {
+        if (saveError) {
+          return false;
+        }
       });
     });
+
+    return true;
   }
 
   public loadWootItems() {

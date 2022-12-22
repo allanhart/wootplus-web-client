@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Container from "@mui/material/Container";
 
 import ApplicationBar from "components/ApplicationBar";
-import ApplicationFooter from "components/ApplicationFooter";
+// import ApplicationFooter from "components/ApplicationFooter";
 
 
 export default function DefaultLayout({ children, pageTitle }: {
@@ -31,8 +31,6 @@ export default function DefaultLayout({ children, pageTitle }: {
       >
         {children}
       </Container>
-
-      <ApplicationFooter />
     </>
   );
 }
