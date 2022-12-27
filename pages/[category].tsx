@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import {ReactElement, useContext, useEffect} from 'react';
 import { useQuery } from 'react-query';
 
 // import Link from 'components/Link';
@@ -13,7 +13,7 @@ import WootItemList from "components/WootItemList";
 import { syncWootItems, loadWootItems } from 'io/queries';
 
 
-export default function Home() {
+function WootItemListPage() {
   const context = useContext(AppContext);
   const updateContext = context?.update;
 
@@ -34,7 +34,7 @@ export default function Home() {
   }, [isReady, updateContext]);
 
 
-  if (syncResult.isError) {
+  if (loadResult.isError) {
     return "Error retrieving data";
   }
 
@@ -46,3 +46,14 @@ export default function Home() {
     <WootItemList items={loadResult.data} />
   );
 }
+
+
+WootItemListPage.getLayout = (children:ReactElement) => {
+  return (
+    <span>
+      {children}
+    </span>
+  );
+}
+
+export default WootItemListPage;

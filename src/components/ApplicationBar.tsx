@@ -21,17 +21,20 @@ const LINEAR_PROGRESS_STYLES = {
   width: '100%',
 };
 
-const StyledAppBar = styled(AppBar)<AppBarProps>(({ theme }: { theme: Theme }) => ({
+const StyledAppBar = styled(AppBar)<AppBarProps>(
+  ({ theme }: { theme: Theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
 }));
 
 
-function PersistentAppBar({ children }: {
+function PersistentAppBar({ children, target = undefined }: {
   children: ReactElement,
+  target?: Node|Window|undefined,
 }): ReactElement {
   const trigger = useScrollTrigger({
-    threshold: 100,
     // disableHysteresis: true,
+    target,
+    threshold: 100,
   });
 
   return (
@@ -47,6 +50,7 @@ export default function ApplicationBar({ maxContainerWidth }: {
 }): ReactElement {
   const context = useContext(AppContext);
   const loadProgress = context?.loadProgress;
+
 
   let progressBar = null;
   if (loadProgress !== null) {
