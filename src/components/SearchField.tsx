@@ -1,7 +1,8 @@
-import { ChangeEvent, useCallback, useMemo } from 'react';
-import { styled } from '@mui/material/styles';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import InputBase from '@mui/material/InputBase';
+import { styled } from '@mui/material/styles';
 
 import { debounce } from '@mui/material/utils';
 import SearchIcon from '@mui/icons-material/Search';
@@ -56,31 +57,39 @@ function SearchField({
   onTimeout,
   placeholder = 'Search...',
   timeoutDelay = 300,
-  value = '',
+  value,
 }: {
   name?: string,
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void,
-  onTimeout?: (fieldValue: string) => void,
+  onTimeout?: (e:ChangeEvent<HTMLInputElement>) => void,
   placeholder?: string,
   timeoutDelay?: number,
   value: string,
 }) {
-  const updateFilterParams = useCallback(
-    (fieldValue: string) => {
-      if (onTimeout) {
-        onTimeout(fieldValue);
-      }
-    },
-    [onTimeout],
-  );
+  const { replace, query } = useRouter();
+
+
+  const [fieldValue, setFieldValue] = useState('');
+
+  useEffect(() => {
+    setFieldValue(value);
+  }, [value]);
+
+
+  const handleDebouncedInputChange = useCallback((e:ChangeEvent<HTMLInputElement>) => {
+    if (onTimeout) {
+      onTimeout(e);
+    }
+  },[onTimeout, replace, query]);
 
   const debouncedUpdateFilterParams = useMemo(
-    () => debounce(updateFilterParams, timeoutDelay),
-    [updateFilterParams, timeoutDelay],
+    () => debounce(handleDebouncedInputChange, timeoutDelay),
+    [handleDebouncedInputChange, timeoutDelay],
   );
 
   const handleInputChange = useCallback((e:ChangeEvent<HTMLInputElement>) => {
-    debouncedUpdateFilterParams(e.target.value);
+    setFieldValue(e.target.value);
+    debouncedUpdateFilterParams(e);
 
     if (onChange) {
       onChange(e);
@@ -97,7 +106,7 @@ function SearchField({
         name={name}
         onChange={handleInputChange}
         placeholder={placeholder}
-        value={value}
+        value={fieldValue}
       />
     </Search>
   );
