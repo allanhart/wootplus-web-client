@@ -39,17 +39,33 @@ export const syncWootItems = (
  */
 export const loadWootItems = (
   params: QueryFunctionContext<[string, {
-    filterParams:Object,
-    orderingParams:Object,
+    query:Object,
     isSyncing: boolean,
   }]>
 ): Promise<WootItem[]> => {
-  const [, { filterParams, orderingParams, isSyncing }] = params.queryKey;
+  const [, { isSyncing, query }] = params.queryKey;
 
   return new Promise((resolve, reject) => {
     if (isSyncing) {
       return resolve([]);
     }
+
+
+    const filterParams:Object = {
+      // title: /samsung/ig,
+      // list_price_max: { "$gt": 100 },
+    };
+
+    const titleFieldValue = query.title as string;
+    if (titleFieldValue) {
+      filterParams.title = new RegExp(titleFieldValue, 'ig');
+    }
+
+    const orderingParams:Object = {
+      $orderBy: {
+        title: 1 // Sort ascending or -1 for descending
+      }
+    };
 
     DataManager.getInstance().loadWootItems(filterParams, orderingParams)
       .then((wootItems) => {

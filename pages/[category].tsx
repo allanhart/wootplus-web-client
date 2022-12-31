@@ -1,5 +1,6 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { NextRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
+
 import { useQuery } from 'react-query';
 
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
@@ -21,6 +22,8 @@ import { getScrollbarWidth } from 'util/shortcuts';
 const INITIAL_ROW_COUNT = 32;
 
 function WootItemListPage() {
+  const { query } = useRouter();
+
   const context = useContext(AppContext);
   const updateContext = context?.update;
 
@@ -30,33 +33,27 @@ function WootItemListPage() {
   const [scrollbarWidth, setScrollbarWidth] = useState<number>(0);
   const [viewSize, setViewSize] = useState<Size|undefined>(undefined);
 
-
   const syncResult = useQuery(['syncWootItems', {
     url: 'http://localhost:8000/woot-items/'
   }], syncWootItems, {
     // useErrorBoundary: true,
   });
 
-  // TODO: Derive this from the current search params
-  const filterParams:Object = {
-    title: /samsung/ig,
-    // list_price_max: { "$gt": 100 },
-  };
-  const orderingParams:Object = {
-    $orderBy: {
-      title: 1 // Sort ascending or -1 for descending
-    }
-  };
-
-
   const loadResult = useQuery(['loadWootItems', {
     isSyncing: syncResult.isLoading,
-    filterParams,
-    orderingParams,
+    query
   }], loadWootItems);
 
+
+  // ---------------------------------------------------------------------------
   const isReady = !(syncResult.isLoading || loadResult.isLoading);
   const wootItems = loadResult.data;
+  const wootItemRefetch = loadResult.refetch;
+
+  useEffect(() => {
+    // console.log('query did change. Refetch', query);
+    wootItemRefetch();
+  }, [query, wootItemRefetch]);
 
   useEffect(() => {
     setScrollbarWidth(getScrollbarWidth());
