@@ -5,7 +5,8 @@ import Head from 'next/head';
 import Script from 'next/script'
 
 import type { NextPage } from 'next';
-import { AppProps } from 'next/app';
+import { AppProps as NextAppProps } from 'next/app';
+import { NextRouter, useRouter } from 'next/router';
 
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
@@ -37,17 +38,19 @@ const queryClient = new QueryClient({
 });
 
 type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode,
+  getLayout?: (page: ReactElement, router:NextRouter) => ReactNode,
   pageTitle?: string,
 }
 
-interface MyAppProps extends AppProps {
+interface AppProps extends NextAppProps {
   Component: NextPageWithLayout,
   emotionCache?: EmotionCache;
 }
 
 
-export default function MyApp(props: MyAppProps) {
+export default function App(props: AppProps) {
+  const router = useRouter();
+
   const {
     Component,
     emotionCache = clientSideEmotionCache,
@@ -86,6 +89,7 @@ export default function MyApp(props: MyAppProps) {
 
         <CacheProvider value={emotionCache}>
           <Head>
+            <link rel="icon" href="/favicon.ico" />
             <meta name="viewport" content="initial-scale=1, width=device-width" />
           </Head>
 
@@ -97,7 +101,7 @@ export default function MyApp(props: MyAppProps) {
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
 
-              {getLayout(<Component {...pageProps} />)}
+              {getLayout(<Component {...pageProps} />, router)}
             </ThemeProvider>
           </AppContext.Provider>
         </CacheProvider>

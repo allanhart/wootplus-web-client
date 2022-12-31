@@ -7,6 +7,7 @@ declare global {
 
 
 export interface WootItem {
+  list_price_max: number,
   photo_url: string,
   title: string,
   url: string,

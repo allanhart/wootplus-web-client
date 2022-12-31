@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import {ReactElement} from "react";
 import useScrollTrigger from "@mui/material/useScrollTrigger";
 import Slide from "@mui/material/Slide";
-import {styled, Theme} from "@mui/material/styles";
+import { styled, Theme } from "@mui/material/styles";
 
 
 const StyledFooter = styled(Box)<BoxProps>(
@@ -16,7 +16,7 @@ const StyledFooter = styled(Box)<BoxProps>(
     right: 0,
     backgroundColor: theme.palette.grey[200],
     borderTopWidth: 1,
-    borderTopColor: 'divider',
+    borderTopColor: theme.palette.divider,
     borderTopStyle: 'solid',
     height: theme.spacing(6),
     display: 'flex',
@@ -24,13 +24,13 @@ const StyledFooter = styled(Box)<BoxProps>(
     justifyContent: 'center',
 }));
 
-function PersistentFooter({ children, target = undefined }: {
+function PersistentFooter({ children, scrollTarget = undefined }: {
   children: ReactElement,
-  target?: Node|Window|undefined,
+  scrollTarget?: Node|Window|undefined,
 }): ReactElement {
   const trigger = useScrollTrigger({
     // disableHysteresis: true,
-    target,
+    target: scrollTarget,
     threshold: 100,
   });
 
@@ -41,20 +41,32 @@ function PersistentFooter({ children, target = undefined }: {
   );
 }
 
-function ApplicationFooter() {
-  return (
-    <PersistentFooter>
-      <StyledFooter component="footer">
-        <Typography variant="body2" color="text.secondary" align="center">
-          {'Copyright © '}
-          <MuiLink color="inherit" href="https://mui.com/">
-            Your Website
-          </MuiLink>{' '}
-          {new Date().getFullYear()}.
-        </Typography>
-      </StyledFooter>
-    </PersistentFooter>
+export default function ApplicationFooter({
+  hideOnScroll,
+  scrollTarget = undefined
+}: {
+  hideOnScroll: boolean,
+  scrollTarget?: Node|Window|undefined,
+}): ReactElement {
+  let view = (
+    <StyledFooter component="footer">
+      <Typography variant="body2" color="text.secondary" align="center">
+        {'Copyright © '}
+        <MuiLink color="inherit" href="https://mui.com/">
+          Your Website
+        </MuiLink>{' '}
+        {new Date().getFullYear()}.
+      </Typography>
+    </StyledFooter>
   );
-}
 
-export default ApplicationFooter;
+  if (hideOnScroll) {
+    view = (
+      <PersistentFooter scrollTarget={scrollTarget}>
+        {view}
+      </PersistentFooter>
+    )
+  }
+
+  return view;
+}

@@ -38,16 +38,22 @@ export const syncWootItems = (
  * @param params QueryFunctionContext
  */
 export const loadWootItems = (
-  params: QueryFunctionContext<[string, { isSyncing: boolean }]>
+  params: QueryFunctionContext<[string, {
+    filterParams:Object,
+    orderingParams:Object,
+    isSyncing: boolean,
+  }]>
 ): Promise<WootItem[]> => {
-  const [, { isSyncing }] = params.queryKey;
+  const [, { filterParams, orderingParams, isSyncing }] = params.queryKey;
 
   return new Promise((resolve, reject) => {
     if (isSyncing) {
       return resolve([]);
     }
 
-    DataManager.getInstance().loadWootItems()
-      .then(resolve).catch(reject);
+    DataManager.getInstance().loadWootItems(filterParams, orderingParams)
+      .then((wootItems) => {
+        resolve(wootItems);
+      }).catch(reject);
   });
 }

@@ -56,7 +56,9 @@ class DataManager {
     return true;
   }
 
-  public loadWootItems() {
+  public loadWootItems(filterParams:Object, orderingParams:Object) {
+    console.log('loading woot items');
+
     return new Promise<WootItem[]>((resolve, reject) => {
       const itemCollection = this.db.collection("woot-items", {
         primaryKey: 'uuid',
@@ -67,8 +69,7 @@ class DataManager {
           return reject(err);
         }
 
-        // TODO: apply filtration parameters to query
-        const loadedItems = itemCollection.find();
+        const loadedItems = itemCollection.find(filterParams, orderingParams);
         resolve(loadedItems);
       });
     });

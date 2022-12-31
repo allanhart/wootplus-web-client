@@ -27,13 +27,13 @@ const StyledAppBar = styled(AppBar)<AppBarProps>(
 }));
 
 
-function PersistentAppBar({ children, target = undefined }: {
+function PersistentAppBar({ children, scrollTarget }: {
   children: ReactElement,
-  target?: Node|Window|undefined,
+  scrollTarget: Node|Window|undefined,
 }): ReactElement {
   const trigger = useScrollTrigger({
     // disableHysteresis: true,
-    target,
+    target: scrollTarget,
     threshold: 100,
   });
 
@@ -45,8 +45,17 @@ function PersistentAppBar({ children, target = undefined }: {
 }
 
 
-export default function ApplicationBar({ maxContainerWidth }: {
-  maxContainerWidth?: Breakpoint|false,
+export default function ApplicationBar(
+  {
+    hideOnScroll,
+    maxContainerWidth,
+    scrollTarget = undefined,
+    toolbarItems = undefined,
+}: {
+    hideOnScroll: boolean,
+    maxContainerWidth?: Breakpoint|false,
+    scrollTarget?: Node|Window|undefined,
+    toolbarItems?: ReactElement | undefined,
 }): ReactElement {
   const context = useContext(AppContext);
   const loadProgress = context?.loadProgress;
@@ -66,18 +75,27 @@ export default function ApplicationBar({ maxContainerWidth }: {
     );
   }
 
+  let view = (
+    <StyledAppBar color="default" elevation={1}>
+      <Container maxWidth={maxContainerWidth} disableGutters>
+        <Toolbar disableGutters sx={{ px: 1 }}>
+          <ApplicationMenuButton />
 
-  return (
-    <PersistentAppBar>
-      <StyledAppBar color="default" elevation={1}>
-        <Container maxWidth={maxContainerWidth} disableGutters>
-          <Toolbar disableGutters sx={{ px: 1 }}>
-            <ApplicationMenuButton />
-          </Toolbar>
-        </Container>
+          {toolbarItems}
+        </Toolbar>
+      </Container>
 
-        {progressBar}
-      </StyledAppBar>
-    </PersistentAppBar>
+      {progressBar}
+    </StyledAppBar>
   );
+
+  if (hideOnScroll) {
+    view = (
+      <PersistentAppBar scrollTarget={scrollTarget}>
+        {view}
+      </PersistentAppBar>
+    );
+  }
+
+  return view;
 }
