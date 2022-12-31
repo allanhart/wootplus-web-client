@@ -19,20 +19,24 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@next/font": "latest",
-    "@svgr/webpack": "latest",
     "named-urls": "latest",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
     "react-query": "latest",
-    "sass": "latest"
+    "react-window": "latest"
   },
   "devDependencies": {
+    "@svgr/webpack": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
+    "@types/react-virtualized-auto-sizer": "latest",
+    "@types/react-window": "latest",
     "eslint": "7.14.0",
     "eslint-config-next": "latest",
     "gh-pages": "latest",
+    "react-virtualized-auto-sizer": "latest",
+    "sass": "^1.57.1",
     "typescript": "latest"
   }
 }

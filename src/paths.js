@@ -2,7 +2,7 @@ import { include } from 'named-urls';
 
 const paths = include('/', {
   index: '',
-  about: 'about',
+  clearance: 'clearance',
 
   error: include('', {
     critical: '500',

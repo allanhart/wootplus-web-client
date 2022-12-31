@@ -1,7 +1,8 @@
 import { ReactElement, useState } from 'react';
 import { useRouter } from 'next/router'
 
-import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
 import Drawer from '@mui/material/Drawer';
 
 import MenuList from '@mui/material/MenuList';
@@ -12,8 +13,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 
 import Link from 'components/Link';
-
-import AppLogo from 'media/woot-logo.svg';
 
 import paths from 'paths';
 
@@ -30,8 +29,8 @@ export default function ApplicationMenuButton(): ReactElement {
     },
     {
       icon: <InfoIcon />,
-      label: 'About',
-      path: paths.about,
+      label: 'Clearance',
+      path: paths.clearance,
     },
   ]);
 
@@ -41,12 +40,13 @@ export default function ApplicationMenuButton(): ReactElement {
 
   return (
     <>
-      <Button
+      <IconButton
         color="inherit"
         onClick={() => setDrawerOpen(!drawerOpen)}
+        sx={{ borderRadius: 2 }}
       >
-        <AppLogo height={40} />
-      </Button>
+        <Avatar src="/woot-icon.png" variant="rounded" />
+      </IconButton>
 
       <Drawer
         open={drawerOpen}

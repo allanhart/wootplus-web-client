@@ -21,17 +21,20 @@ const LINEAR_PROGRESS_STYLES = {
   width: '100%',
 };
 
-const StyledAppBar = styled(AppBar)<AppBarProps>(({ theme }: { theme: Theme }) => ({
+const StyledAppBar = styled(AppBar)<AppBarProps>(
+  ({ theme }: { theme: Theme }) => ({
   zIndex: theme.zIndex.drawer + 1,
 }));
 
 
-function PersistentAppBar({ children }: {
+function PersistentAppBar({ children, scrollTarget }: {
   children: ReactElement,
+  scrollTarget: Node|Window|undefined,
 }): ReactElement {
   const trigger = useScrollTrigger({
-    threshold: 100,
     // disableHysteresis: true,
+    target: scrollTarget,
+    threshold: 100,
   });
 
   return (
@@ -42,11 +45,21 @@ function PersistentAppBar({ children }: {
 }
 
 
-export default function ApplicationBar({ maxContainerWidth }: {
-  maxContainerWidth?: Breakpoint|false,
+export default function ApplicationBar(
+  {
+    hideOnScroll,
+    maxContainerWidth,
+    scrollTarget = undefined,
+    toolbarItems = undefined,
+}: {
+    hideOnScroll: boolean,
+    maxContainerWidth?: Breakpoint|false,
+    scrollTarget?: Node|Window|undefined,
+    toolbarItems?: ReactElement | undefined,
 }): ReactElement {
   const context = useContext(AppContext);
   const loadProgress = context?.loadProgress;
+
 
   let progressBar = null;
   if (loadProgress !== null) {
@@ -62,18 +75,27 @@ export default function ApplicationBar({ maxContainerWidth }: {
     );
   }
 
+  let view = (
+    <StyledAppBar color="default" elevation={1}>
+      <Container maxWidth={maxContainerWidth} disableGutters>
+        <Toolbar disableGutters sx={{ px: 1 }}>
+          <ApplicationMenuButton />
 
-  return (
-    <PersistentAppBar>
-      <StyledAppBar color="default" elevation={1}>
-        <Container maxWidth={maxContainerWidth} disableGutters>
-          <Toolbar disableGutters sx={{ px: 1 }}>
-            <ApplicationMenuButton />
-          </Toolbar>
-        </Container>
+          {toolbarItems}
+        </Toolbar>
+      </Container>
 
-        {progressBar}
-      </StyledAppBar>
-    </PersistentAppBar>
+      {progressBar}
+    </StyledAppBar>
   );
+
+  if (hideOnScroll) {
+    view = (
+      <PersistentAppBar scrollTarget={scrollTarget}>
+        {view}
+      </PersistentAppBar>
+    );
+  }
+
+  return view;
 }
