@@ -16,7 +16,7 @@ function WootItemList({ items }: { items: WootItem[] }) {
         <ListItem key={wootItem.uuid} disableGutters>
           <ListItemButton
             href={wootItem.url}
-            rel="noopener"
+            rel="noreferrer"
             target="_blank"
           >
             <ListItemAvatar>

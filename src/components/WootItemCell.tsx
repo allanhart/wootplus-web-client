@@ -37,7 +37,7 @@ function WootItemView({ wootItem }: { wootItem: WootItem }):ReactElement {
     image = (
       <ButtonBase
         href={url}
-        rel="noopener"
+        rel="noreferrer"
         target="_blank"
         sx={{
           aspectRatio: '1',
