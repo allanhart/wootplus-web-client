@@ -36,8 +36,7 @@ class DataManager {
       throw new Error(`Invalid response from URL: ${url}`);
     }
 
-    const responseData = await response.json();
-    return responseData.items;
+    return await response.json();
   }
 
   public saveWootItems(wootItems:WootItem[]):Promise<boolean> {
