@@ -7,10 +7,10 @@ import Drawer from '@mui/material/Drawer';
 
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
+// import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
+// import HomeIcon from '@mui/icons-material/Home';
+// import InfoIcon from '@mui/icons-material/Info';
 
 import Link from 'components/Link';
 
@@ -23,14 +23,16 @@ export default function ApplicationMenuButton(): ReactElement {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [navLinkArrangement] = useState([
     {
-      icon: <HomeIcon />,
       label: 'Home',
       path: paths.index,
     },
     {
-      icon: <InfoIcon />,
       label: 'Clearance',
-      path: paths.clearance,
+      path: `${paths.index}?category=Clearance`,
+    },
+    {
+      label: 'Electronics',
+      path: `${paths.index}?category=Electronics`,
     },
   ]);
 
@@ -59,7 +61,7 @@ export default function ApplicationMenuButton(): ReactElement {
       >
         <MenuList disablePadding>
           {navLinkArrangement.map((linkInfo) => {
-            const { icon, label, path } = linkInfo;
+            const { label, path } = linkInfo;
 
             return (
               <MenuItem
@@ -70,9 +72,6 @@ export default function ApplicationMenuButton(): ReactElement {
                 selected={path === router.pathname}
                 sx={{ width: 220, py: 2 }}
               >
-                <ListItemIcon>
-                  {icon}
-                </ListItemIcon>
                 <ListItemText primary={label} />
               </MenuItem>
             );

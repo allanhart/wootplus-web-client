@@ -1,56 +1,177 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import { ReactElement, useContext, useEffect, useState } from 'react';
+import { NextRouter, useRouter } from "next/router";
+
+import { useQuery } from 'react-query';
+
+import AutoSizer, { Size } from "react-virtualized-auto-sizer";
+import { FixedSizeGrid } from "react-window";
+
+// import Link from 'components/Link';
+// import paths from 'paths';
+
+import AppContext from "AppContext";
+import DefaultLayout from 'layout/DefaultLayout';
+
+import WootItemCell from 'components/WootItemCell';
+import WootItemFilterView from 'components/WootItemFilterView';
+
+import { syncWootItems, loadWootItems } from 'io/queries';
+
+import { getScrollbarWidth, apiUrl } from 'util/shortcuts';
+
+const INITIAL_ROW_COUNT = 32;
+
+function WootItemListPage() {
+  const { query } = useRouter();
+
+  const context = useContext(AppContext);
+  const updateContext = context?.update;
+
+  const [cellWidth, setCellWidth] = useState<number>(0);
+  const [columnCount, setColumnCount] = useState<number>(0);
+  const [rowCount, setRowCount] = useState<number>(INITIAL_ROW_COUNT);
+  const [scrollbarWidth, setScrollbarWidth] = useState<number>(0);
+  const [viewSize, setViewSize] = useState<Size|undefined>(undefined);
+
+  const syncResult = useQuery(['syncWootItems', {
+    url: apiUrl(`/feed-items/`),
+  }], syncWootItems, {
+    // enabled: !!category,
+    // useErrorBoundary: true,
+  });
+
+  const loadResult = useQuery(['loadWootItems', {
+    query
+  }], loadWootItems, {
+    enabled: syncResult.status === 'success',
+  });
+
+  // ---------------------------------------------------------------------------
+  const syncStatus = syncResult.status;
+
+  const isReady = loadResult.status === 'success';
+  const wootItems = loadResult.data;
+  const wootItemRefetch = loadResult.refetch;
 
 
-function IndexPage() {
+  useEffect(() => {
+    if (syncStatus !== 'success') {
+      return;
+    }
+
+    wootItemRefetch();
+  }, [query, syncStatus, wootItemRefetch]);
+
+  useEffect(() => {
+    setScrollbarWidth(getScrollbarWidth());
+
+    updateContext({
+      loadProgress: isReady ? null : undefined,
+    });
+  }, [isReady, updateContext]);
+
+  // ---------------------------------------------------------------------------
+  /**
+   * Callback invoked whenever the grid dimensions update.
+   * Cell size and row/col count are determined with respect to grid width
+   * such that cells are always square.
+   * @type {(function(*): void)|*}
+   */
+  useEffect(() => {
+    if (!viewSize) {
+      return;
+    }
+
+    let gridWidth = viewSize.width - scrollbarWidth;
+
+    let colCount;
+    if (gridWidth > 1920) {
+      colCount = 8;
+    } else if (gridWidth > 1600) {
+      colCount = 7;
+    } else if (gridWidth > 1280) {
+      colCount = 6;
+    } else if (gridWidth > 1024) {
+      colCount = 5;
+    } else if (gridWidth > 768) {
+      colCount = 4;
+    } else if (gridWidth > 414) {
+      colCount = 3;
+    } else {
+      colCount = 2;
+    }
+
+    setCellWidth(gridWidth / colCount);
+    setColumnCount(colCount);
+  }, [scrollbarWidth, viewSize]);
+
+
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (!(isReady && columnCount && wootItems)) {
+      return setRowCount(INITIAL_ROW_COUNT);
+    }
+
+    setRowCount(Math.ceil(wootItems.length / columnCount));
+  }, [columnCount, isReady, wootItems]);
+
+  // ---------------------------------------------------------------------------
+  if (loadResult.isError) {
+    return "Error retrieving data";
+  }
+
   return (
-    <Box p={2}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Index Page
-      </Typography>
+    <AutoSizer onResize={setViewSize}>
+      {({ height, width }) => {
+        if (!(columnCount && cellWidth)) {
+          return null;
+        }
 
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-      <Typography paragraph>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-      </Typography>
-    </Box>
+        return (
+          <FixedSizeGrid
+            columnCount={columnCount}
+            columnWidth={cellWidth}
+            height={height}
+            itemData={{
+              columnCount,
+              rowCount,
+              items: isReady ? wootItems : null,
+              // onCellClick,
+              // onCellDidMount: handleCellDidMount,
+              // onCellWillUnmount: handleCellWillUnmount,
+            }}
+            rowCount={rowCount}
+            rowHeight={cellWidth + 64}
+            width={width}
+          >
+            {WootItemCell}
+          </FixedSizeGrid>
+        );
+      }}
+    </AutoSizer>
   );
 }
 
-IndexPage.pageTitle = "Woot+";
+WootItemListPage.getLayout = (page:ReactElement, router:NextRouter) => {
+  const category = router.query.category as string || 'clearance';
+  const pageTitle = `${process.env.NEXT_PUBLIC_APP_TITLE} | ${category}`;
 
-export default IndexPage;
+  return (
+    <DefaultLayout
+      maxContainerWidth={false}
+      layout="absolute"
+      pageTitle={pageTitle}
+      toolbarItems={(
+        <WootItemFilterView
+          baseParams={{ category }}
+        />
+      )}
+    >
+      {page}
+    </DefaultLayout>
+  );
+};
+
+
+
+export default WootItemListPage;

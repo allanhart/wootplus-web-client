@@ -20,7 +20,7 @@ function WootItemFilterView({ baseParams }: {
 
   const handleSearchFieldTimeout = useCallback((e:ChangeEvent<HTMLInputElement>) => {
     updateQueryParams(e.target.name, e.target.value);
-  }, [updateQueryParams]);
+  }, [updateQueryParams, query]);
 
   return (
     <SearchField

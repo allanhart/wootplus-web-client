@@ -3,6 +3,7 @@ import { include } from 'named-urls';
 const paths = include('/', {
   index: '',
   clearance: 'clearance',
+  electronics: 'electronics',
 
   error: include('', {
     critical: '500',

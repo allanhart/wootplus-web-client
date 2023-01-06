@@ -1,5 +1,4 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
 
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
@@ -66,9 +65,6 @@ function SearchField({
   timeoutDelay?: number,
   value: string,
 }) {
-  const { replace, query } = useRouter();
-
-
   const [fieldValue, setFieldValue] = useState('');
 
   useEffect(() => {
@@ -80,21 +76,20 @@ function SearchField({
     if (onTimeout) {
       onTimeout(e);
     }
-  },[onTimeout, replace, query]);
+  }, [onTimeout]);
 
-  const debouncedUpdateFilterParams = useMemo(
-    () => debounce(handleDebouncedInputChange, timeoutDelay),
-    [handleDebouncedInputChange, timeoutDelay],
-  );
+  const debouncedUpdateFilterParams = useMemo(() => (
+    debounce(handleDebouncedInputChange, timeoutDelay)
+  ), [handleDebouncedInputChange, timeoutDelay]);
 
-  const handleInputChange = useCallback((e:ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e:ChangeEvent<HTMLInputElement>) => {
     setFieldValue(e.target.value);
     debouncedUpdateFilterParams(e);
 
     if (onChange) {
       onChange(e);
     }
-  }, [onChange]);
+  };
 
   return (
     <Search>

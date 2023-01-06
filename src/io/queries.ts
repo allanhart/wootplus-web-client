@@ -43,13 +43,14 @@ export const loadWootItems = (
 
   return new Promise((resolve, reject) => {
     const filterParams:Record<string, Object> = {
-      // title: /samsung/ig,
       // list_price_max: { "$gt": 100 },
     };
 
-    const titleFieldValue = query.title as string;
-    if (titleFieldValue) {
-      filterParams.title = new RegExp(titleFieldValue, 'ig');
+    if (query.title) {
+      filterParams.title = new RegExp(query.title as string, 'ig');
+    }
+    if (query.category) {
+      filterParams.site = new RegExp(query.category as string, 'ig');
     }
 
     const orderingParams:Object = {
