@@ -57,7 +57,6 @@ function WootItemListPage() {
 
   useEffect(() => {
     if (syncStatus !== 'success') {
-      console.log('sync yet not complete');
       return;
     }
 

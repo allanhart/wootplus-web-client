@@ -57,8 +57,6 @@ class DataManager {
   }
 
   public loadWootItems(filterParams:Object, orderingParams:Object) {
-    console.log('load woot items', filterParams, orderingParams);
-
     return new Promise<WootItem[]>((resolve, reject) => {
       const itemCollection = this.db.collection("woot-items", {
         primaryKey: 'uuid',
