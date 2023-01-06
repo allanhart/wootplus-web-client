@@ -58,6 +58,7 @@ export default function App(props: AppProps) {
   } = props;
 
   const [loadProgress, setLoadProgress] = useState(null);
+  const [isReady, setIsReady] = useState(false);
 
   const updateAppContext = useCallback((context:AppContextInterface) => {
     Object.keys(context).forEach((key) => {
@@ -72,6 +73,10 @@ export default function App(props: AppProps) {
     });
   }, []);
 
+  const handleForerunnerDBLoad = useCallback(() => {
+    setIsReady(true);
+  }, []);
+
   const getLayout = Component.getLayout ?? ((page) => (
     <DefaultLayout
       pageTitle={Component.pageTitle ?? process.env.NEXT_PUBLIC_APP_TITLE ?? 'My Application'}
@@ -80,9 +85,17 @@ export default function App(props: AppProps) {
     </DefaultLayout>
   ));
 
+  let view = null;
+  if (isReady) {
+    view = getLayout(<Component {...pageProps} />, router);
+  }
+
   return (
     <>
-      <Script src="/js/lib/ForerunnerDB-2.0.22/fdb-core+persist.min.js" />
+      <Script
+        src="/js/lib/ForerunnerDB-2.0.22/fdb-core+persist.min.js"
+        onLoad={handleForerunnerDBLoad}
+      />
 
       <QueryClientProvider client={queryClient}>
         {/*<ReactQueryDevtools initialIsOpen={false} />*/}
@@ -101,7 +114,7 @@ export default function App(props: AppProps) {
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
 
-              {getLayout(<Component {...pageProps} />, router)}
+              {view}
             </ThemeProvider>
           </AppContext.Provider>
         </CacheProvider>
