@@ -20,3 +20,8 @@ export function getScrollbarWidth() {
 
   return scrollbarWidth;
 }
+
+
+export function apiUrl(endpoint:string): string {
+  return process.env.NEXT_PUBLIC_API_URL_PREFIX + endpoint;
+}

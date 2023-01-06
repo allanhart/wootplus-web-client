@@ -1,6 +1,8 @@
+import { ParsedUrlQuery } from 'querystring';
 import { WootItem } from 'types';
 
 import { QueryFunctionContext } from 'react-query';
+
 
 import DataManager from "./DataManager";
 
@@ -39,19 +41,13 @@ export const syncWootItems = (
  */
 export const loadWootItems = (
   params: QueryFunctionContext<[string, {
-    query:Object,
-    isSyncing: boolean,
+    query:ParsedUrlQuery,
   }]>
 ): Promise<WootItem[]> => {
-  const [, { isSyncing, query }] = params.queryKey;
+  const [, { query }] = params.queryKey;
 
   return new Promise((resolve, reject) => {
-    if (isSyncing) {
-      return resolve([]);
-    }
-
-
-    const filterParams:Object = {
+    const filterParams:Record<string, Object> = {
       // title: /samsung/ig,
       // list_price_max: { "$gt": 100 },
     };

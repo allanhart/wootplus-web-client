@@ -17,12 +17,13 @@ import WootItemFilterView from 'components/WootItemFilterView';
 
 import { syncWootItems, loadWootItems } from 'io/queries';
 
-import { getScrollbarWidth } from 'util/shortcuts';
+import { getScrollbarWidth, apiUrl } from 'util/shortcuts';
 
 const INITIAL_ROW_COUNT = 32;
 
 function WootItemListPage() {
   const { query } = useRouter();
+  const { category } = query;
 
   const context = useContext(AppContext);
   const updateContext = context?.update;
@@ -34,26 +35,34 @@ function WootItemListPage() {
   const [viewSize, setViewSize] = useState<Size|undefined>(undefined);
 
   const syncResult = useQuery(['syncWootItems', {
-    url: 'http://localhost:8000/woot-items/'
+    url: apiUrl(`/feed-items/${category}/`),
   }], syncWootItems, {
+    enabled: !!category,
     // useErrorBoundary: true,
   });
 
   const loadResult = useQuery(['loadWootItems', {
-    isSyncing: syncResult.isLoading,
     query
-  }], loadWootItems);
-
+  }], loadWootItems, {
+    enabled: syncResult.status === 'success',
+  });
 
   // ---------------------------------------------------------------------------
-  const isReady = !(syncResult.isLoading || loadResult.isLoading);
+  const syncStatus = syncResult.status;
+
+  const isReady = loadResult.status === 'success';
   const wootItems = loadResult.data;
   const wootItemRefetch = loadResult.refetch;
 
+
   useEffect(() => {
-    // console.log('query did change. Refetch', query);
+    if (syncStatus !== 'success') {
+      console.log('sync yet not complete');
+      return;
+    }
+
     wootItemRefetch();
-  }, [query, wootItemRefetch]);
+  }, [query, syncStatus, wootItemRefetch]);
 
   useEffect(() => {
     setScrollbarWidth(getScrollbarWidth());
