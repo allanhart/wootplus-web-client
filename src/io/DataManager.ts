@@ -40,20 +40,22 @@ class DataManager {
     return responseData.items;
   }
 
-  public saveWootItems(wootItems:WootItem[]):boolean {
-    const itemCollection = this.db.collection("woot-items", {
-      primaryKey: 'uuid',
-    });
+  public saveWootItems(wootItems:WootItem[]):Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const itemCollection = this.db.collection("woot-items", {
+        primaryKey: 'uuid',
+      });
 
-    itemCollection.insert(wootItems, () => {
-      itemCollection.save((saveError:Error) => {
-        if (saveError) {
-          return false;
-        }
+      itemCollection.insert(wootItems, () => {
+        itemCollection.save((saveError:Error) => {
+          if (saveError) {
+            reject(false);
+          } else {
+            resolve(true);
+          }
+        });
       });
     });
-
-    return true;
   }
 
   public loadWootItems(filterParams:Object, orderingParams:Object) {

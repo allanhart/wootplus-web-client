@@ -24,12 +24,7 @@ export const syncWootItems = (
     // Update the internal database with the retrieved items
     const dataManager = DataManager.getInstance();
     dataManager.fetchWootItems(url).then((wootItems) => {
-      const saveResult = dataManager.saveWootItems(wootItems);
-      if (saveResult) {
-        resolve(saveResult);
-      } else {
-        reject(saveResult);
-      }
+      dataManager.saveWootItems(wootItems).then(resolve).catch(reject);
     }).catch(reject);
   });
 }
