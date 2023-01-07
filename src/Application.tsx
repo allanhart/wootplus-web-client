@@ -1,7 +1,5 @@
-import { NextPageWithLayout } from 'types';
-import { AppProps as NextAppProps } from 'next/app';
+import { AppProps } from 'types';
 import { useRouter } from 'next/router';
-
 import { useQuery } from 'react-query';
 
 import DefaultLayout from 'layout/DefaultLayout';
@@ -12,11 +10,7 @@ import AppContext, { AppContextInterface } from "AppContext";
 import {useCallback, useState} from "react";
 
 
-interface ApplicationProps extends NextAppProps {
-  Component: NextPageWithLayout,
-}
-
-export default function Application(props: ApplicationProps) {
+export default function Application(props: AppProps) {
   const { Component, pageProps } = props;
 
   const router = useRouter();

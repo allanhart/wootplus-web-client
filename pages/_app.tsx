@@ -1,12 +1,11 @@
-import type { NextPageWithLayout } from 'types';
+import type { AppProps } from 'types';
 import { useCallback, useState } from 'react';
 
 import Head from 'next/head';
 import Script from 'next/script'
 
-import { AppProps as NextAppProps } from 'next/app';
 
-import { CacheProvider, EmotionCache } from '@emotion/react';
+import { CacheProvider } from '@emotion/react';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 // import { ReactQueryDevtools } from 'react-query/devtools';
@@ -35,13 +34,7 @@ const queryClient = new QueryClient({
 });
 
 
-interface AppWrapperProps extends NextAppProps {
-  Component: NextPageWithLayout,
-  emotionCache?: EmotionCache;
-}
-
-
-export default function AppWrapper(props: AppWrapperProps) {
+export default function AppWrapper(props: AppProps) {
   const {
     emotionCache = clientSideEmotionCache,
   } = props;

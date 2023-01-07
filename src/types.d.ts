@@ -1,5 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { NextPage } from 'next';
+import { AppProps as NextAppProps } from 'next/app';
+import { EmotionCache } from "@emotion/react";
 
 
 declare global {
@@ -12,6 +14,11 @@ declare global {
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement, router:NextRouter) => ReactNode,
   pageTitle?: string,
+}
+
+export interface AppProps extends NextAppProps {
+  Component: NextPageWithLayout,
+  emotionCache?: EmotionCache;
 }
 
 export interface Tag {
