@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useContext, useMemo, useState } from 'react';
 import { useRouter } from 'next/router'
 
 import Avatar from "@mui/material/Avatar";
@@ -7,38 +7,63 @@ import Drawer from '@mui/material/Drawer';
 
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-// import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-// import HomeIcon from '@mui/icons-material/Home';
-// import InfoIcon from '@mui/icons-material/Info';
 
 import Link from 'components/Link';
 
 import paths from 'paths';
+import AppContext from "AppContext";
 
 
-export default function ApplicationMenuButton(): ReactElement {
+function ApplicationMenuButton(): ReactElement {
   const router = useRouter();
+  const context = useContext(AppContext);
+  const { tags } = context;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [navLinkArrangement] = useState([
-    {
+
+  const navMenu = useMemo(() => {
+    if (!tags) {
+      return null;
+    }
+
+    const navLinkArrangement = [
+      {
       label: 'Home',
       path: paths.index,
-    },
-    {
+      },
+      {
       label: 'Clearance',
       path: `${paths.index}?category=Clearance`,
-    },
-    {
+      },
+      {
       label: 'Electronics',
       path: `${paths.index}?category=Electronics`,
-    },
-  ]);
+      },
+    ];
 
-  const handleMenuItemClick = () => {
-    setDrawerOpen(false);
-  };
+    return (
+      <MenuList disablePadding>
+        {navLinkArrangement.map((linkInfo) => {
+          const { label, path } = linkInfo;
+
+          return (
+            <MenuItem
+              component={Link}
+              href={path}
+              key={label}
+              onClick={() => setDrawerOpen(false)}
+              selected={path === router.pathname}
+              sx={{ width: 220, py: 2 }}
+            >
+              <ListItemText primary={label} />
+            </MenuItem>
+          );
+        })}
+      </MenuList>
+    );
+  }, [tags]);
+
 
   return (
     <>
@@ -59,25 +84,10 @@ export default function ApplicationMenuButton(): ReactElement {
           },
         }}
       >
-        <MenuList disablePadding>
-          {navLinkArrangement.map((linkInfo) => {
-            const { label, path } = linkInfo;
-
-            return (
-              <MenuItem
-                component={Link}
-                href={path}
-                key={label}
-                onClick={handleMenuItemClick}
-                selected={path === router.pathname}
-                sx={{ width: 220, py: 2 }}
-              >
-                <ListItemText primary={label} />
-              </MenuItem>
-            );
-          })}
-        </MenuList>
+        {navMenu}
       </Drawer>
     </>
   );
 }
+
+export default ApplicationMenuButton;

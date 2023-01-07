@@ -1,4 +1,6 @@
 import { AppProps } from 'types';
+
+import { useCallback, useState } from "react";
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 
@@ -7,7 +9,6 @@ import DefaultLayout from 'layout/DefaultLayout';
 import { fetchTags } from "io/queries";
 
 import AppContext, { AppContextInterface } from "AppContext";
-import {useCallback, useState} from "react";
 
 
 export default function Application(props: AppProps) {
@@ -17,7 +18,6 @@ export default function Application(props: AppProps) {
   const [loadProgress, setLoadProgress] = useState(null);
 
   const tagFetchResult = useQuery(['fetchTags'], fetchTags);
-  console.log(tagFetchResult.data);
 
   const updateAppContext = useCallback((context:AppContextInterface) => {
     Object.keys(context).forEach((key) => {

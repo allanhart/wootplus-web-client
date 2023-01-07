@@ -8,10 +8,9 @@ export interface AppContextInterface extends Record<string, any> {
   update: Function,
 }
 
-const AppContext = React.createContext<AppContextInterface>({
+
+export default React.createContext<AppContextInterface>({
   loadProgress: null,
   tags: undefined,
   update: () => {},
 });
-
-export default AppContext;
