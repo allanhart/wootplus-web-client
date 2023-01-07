@@ -1,8 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import { useCallback, useState } from 'react';
 
-import Head from 'next/head';
-import Script from 'next/script'
+import Script from 'next/script';
 
 import type { NextPage } from 'next';
 import { AppProps as NextAppProps } from 'next/app';
@@ -101,11 +100,6 @@ export default function App(props: AppProps) {
         {/*<ReactQueryDevtools initialIsOpen={false} />*/}
 
         <CacheProvider value={emotionCache}>
-          <Head>
-            <link rel="icon" href="/favicon.ico" />
-            <meta name="viewport" content="initial-scale=1, width=device-width" />
-          </Head>
-
           <AppContext.Provider value={{
             loadProgress,
             update: updateAppContext,
