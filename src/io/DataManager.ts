@@ -1,4 +1,5 @@
-import { WootItem } from 'types';
+import { Tag, WootItem } from 'types';
+import { apiUrl } from "util/shortcuts";
 
 
 class DataManager {
@@ -21,6 +22,23 @@ class DataManager {
   private constructor() {
     const fdb = new window.ForerunnerDB();
     this.db = fdb.db('wootplus');
+  }
+
+  public async fetchTags():Promise<Tag[]> {
+    const requestUrl = apiUrl('/tags/');
+
+    let response;
+    try {
+      response = await fetch(requestUrl, { method: 'GET' });
+    } catch (err) {
+      throw new Error(`Unable to fetch data at URL: ${requestUrl}`);
+    }
+
+    if (!response.ok) {
+      throw new Error(`Invalid response from URL: ${requestUrl}`);
+    }
+
+    return await response.json();
   }
 
   public async fetchWootItems(url:string):Promise<WootItem[]> {

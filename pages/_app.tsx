@@ -1,11 +1,10 @@
-import type { ReactElement, ReactNode } from 'react';
+import type { NextPageWithLayout } from 'types';
 import { useCallback, useState } from 'react';
 
-import Script from 'next/script';
+import Head from 'next/head';
+import Script from 'next/script'
 
-import type { NextPage } from 'next';
 import { AppProps as NextAppProps } from 'next/app';
-import { NextRouter, useRouter } from 'next/router';
 
 import { CacheProvider, EmotionCache } from '@emotion/react';
 
@@ -19,9 +18,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import createEmotionCache from 'style/createEmotionCache';
 import theme from 'style/theme';
 
-import DefaultLayout from 'layout/DefaultLayout';
 
-import AppContext, { AppContextInterface } from "AppContext";
+import Application from 'Application';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -36,57 +34,32 @@ const queryClient = new QueryClient({
   },
 });
 
-type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement, router:NextRouter) => ReactNode,
-  pageTitle?: string,
-}
 
-interface AppProps extends NextAppProps {
+interface AppWrapperProps extends NextAppProps {
   Component: NextPageWithLayout,
   emotionCache?: EmotionCache;
 }
 
 
-export default function App(props: AppProps) {
-  const router = useRouter();
-
+export default function AppWrapper(props: AppWrapperProps) {
   const {
-    Component,
     emotionCache = clientSideEmotionCache,
-    pageProps
   } = props;
 
-  const [loadProgress, setLoadProgress] = useState(null);
-  const [isReady, setIsReady] = useState(false);
 
-  const updateAppContext = useCallback((context:AppContextInterface) => {
-    Object.keys(context).forEach((key) => {
-      const value = context[key];
-      switch (key) {
-        case 'loadProgress':
-          setLoadProgress(value);
-          break;
-        default:
-          throw new Error(`Unexpected context key/value pair: (${key}=${value})`);
-      }
-    });
-  }, []);
+  const [isForeRunnerLoaded, setIsForeRunnerLoaded] = useState(false);
 
   const handleForerunnerDBLoad = useCallback(() => {
-    setIsReady(true);
+    setIsForeRunnerLoaded(true);
   }, []);
 
-  const getLayout = Component.getLayout ?? ((page) => (
-    <DefaultLayout
-      pageTitle={Component.pageTitle ?? process.env.NEXT_PUBLIC_APP_TITLE ?? 'My Application'}
-    >
-      {page}
-    </DefaultLayout>
-  ));
 
-  let view = null;
-  if (isReady) {
-    view = getLayout(<Component {...pageProps} />, router);
+  let view;
+  if (isForeRunnerLoaded) {
+    view = <Application {...props} />;
+  } else {
+    console.log('TODO: render preloader');
+    view = null;
   }
 
   return (
@@ -100,17 +73,17 @@ export default function App(props: AppProps) {
         {/*<ReactQueryDevtools initialIsOpen={false} />*/}
 
         <CacheProvider value={emotionCache}>
-          <AppContext.Provider value={{
-            loadProgress,
-            update: updateAppContext,
-          }}>
-            <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
+          <Head>
+            <link rel="icon" href="/favicon.ico" />
+            <meta name="viewport" content="initial-scale=1, width=device-width" />
+          </Head>
 
-              {view}
-            </ThemeProvider>
-          </AppContext.Provider>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+
+            {view}
+          </ThemeProvider>
         </CacheProvider>
       </QueryClientProvider>
     </>

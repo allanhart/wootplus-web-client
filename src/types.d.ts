@@ -1,8 +1,22 @@
+import type { ReactElement, ReactNode } from 'react';
+import type { NextPage } from 'next';
+
+
 declare global {
   interface Window {
     gtag: (...args: any[]) => void
     ForerunnerDB: any,
   }
+}
+
+export type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement, router:NextRouter) => ReactNode,
+  pageTitle?: string,
+}
+
+export interface Tag {
+  name: string,
+  full_name: string,
 }
 
 export interface WootItem {

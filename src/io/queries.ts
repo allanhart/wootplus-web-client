@@ -1,10 +1,19 @@
 import { ParsedUrlQuery } from 'querystring';
-import { WootItem } from 'types';
+import { Tag, WootItem } from 'types';
 
 import { QueryFunctionContext } from 'react-query';
 
 
 import DataManager from "./DataManager";
+
+export const fetchTags = (): Promise<Tag[]|Error> => {
+  return new Promise((resolve, reject) => {
+    // Update the internal database with the retrieved items
+    const dataManager = DataManager.getInstance();
+    dataManager.fetchTags().then(resolve).catch(reject);
+  });
+}
+
 
 /**
  * Type the payload passed from our React component into our API function.
