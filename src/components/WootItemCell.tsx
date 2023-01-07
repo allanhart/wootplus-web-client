@@ -76,7 +76,6 @@ function WootItemView({ wootItem }: { wootItem: WootItem }):ReactElement {
 }
 
 // -----------------------------------------------------------------------------
-
 const WootItemCell: React.FC<GridChildComponentProps> = (
   { data, columnIndex, rowIndex, style }
 ) => {
