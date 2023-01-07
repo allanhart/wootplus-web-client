@@ -30,7 +30,7 @@ function WootItemPlaceholder():ReactElement {
 
 // -----------------------------------------------------------------------------
 function WootItemView({ wootItem }: { wootItem: WootItem }):ReactElement {
-  const { list_price_max, photo_url, title, url } = wootItem;
+  const { min_price, photo_url, title, url } = wootItem;
 
   let image = null;
   if (photo_url) {
@@ -68,7 +68,7 @@ function WootItemView({ wootItem }: { wootItem: WootItem }):ReactElement {
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
-          ${list_price_max}
+          ${min_price}
         </Typography>
       </Box>
     </>

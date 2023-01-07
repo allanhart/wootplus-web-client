@@ -5,6 +5,14 @@ class DataManager {
   private static instance: DataManager;
   private db:any;
 
+  public static getInstance():DataManager {
+    if (!DataManager.instance) {
+      DataManager.instance = new DataManager();
+    }
+
+    return DataManager.instance;
+  }
+
   /**
    * The DataManager's constructor should always be private to prevent direct
    * construction calls with the `new` operator.
@@ -13,15 +21,6 @@ class DataManager {
   private constructor() {
     const fdb = new window.ForerunnerDB();
     this.db = fdb.db('wootplus');
-  }
-
-
-  public static getInstance():DataManager {
-    if (!DataManager.instance) {
-      DataManager.instance = new DataManager();
-    }
-
-    return DataManager.instance;
   }
 
   public async fetchWootItems(url:string):Promise<WootItem[]> {

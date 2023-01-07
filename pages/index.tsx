@@ -153,8 +153,11 @@ function WootItemListPage() {
 }
 
 WootItemListPage.getLayout = (page:ReactElement, router:NextRouter) => {
-  const category = router.query.category as string || 'clearance';
-  const pageTitle = `${process.env.NEXT_PUBLIC_APP_TITLE} | ${category}`;
+  const category = router.query.category as string;
+  let pageTitle = `${process.env.NEXT_PUBLIC_APP_TITLE}`;
+  if (category) {
+    pageTitle = `${pageTitle} | ${category}`;
+  }
 
   return (
     <DefaultLayout
@@ -162,9 +165,7 @@ WootItemListPage.getLayout = (page:ReactElement, router:NextRouter) => {
       layout="absolute"
       pageTitle={pageTitle}
       toolbarItems={(
-        <WootItemFilterView
-          baseParams={{ category }}
-        />
+        <WootItemFilterView />
       )}
     >
       {page}

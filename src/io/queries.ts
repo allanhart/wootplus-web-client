@@ -50,18 +50,17 @@ export const loadWootItems = (
       filterParams.title = new RegExp(query.title as string, 'ig');
     }
     if (query.category) {
-      filterParams.site = new RegExp(query.category as string, 'ig');
+      const categoryPattern = `^${query.category as string}`;
+      filterParams.category = new RegExp(categoryPattern, 'ig');
     }
 
     const orderingParams:Object = {
       $orderBy: {
-        title: 1 // Sort ascending or -1 for descending
+        discount: -1 // Sort ascending or -1 for descending
       }
     };
 
     DataManager.getInstance().loadWootItems(filterParams, orderingParams)
-      .then((wootItems) => {
-        resolve(wootItems);
-      }).catch(reject);
+      .then(resolve).catch(reject);
   });
 }

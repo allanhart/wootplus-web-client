@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import SearchField from "./SearchField";
 
-function WootItemFilterView({ baseParams }: {
+function WootItemFilterView({ baseParams = {} }: {
   baseParams: Record<string, string>
 }) {
   const { replace, query } = useRouter();
