@@ -6,7 +6,7 @@ import { QueryFunctionContext } from 'react-query';
 
 import DataManager from "./DataManager";
 
-export const fetchTags = (): Promise<Tag[]|Error> => {
+export const fetchTags = (): Promise<Tag[]> => {
   return new Promise((resolve, reject) => {
     // Update the internal database with the retrieved items
     const dataManager = DataManager.getInstance();

@@ -44,7 +44,7 @@ export default function Application(props: AppProps) {
   return (
     <AppContext.Provider value={{
       loadProgress,
-      tags: tagFetchResult.data,
+      tags: tagFetchResult.data || [],
       update: updateAppContext,
     }}>
       {getLayout(<Component {...pageProps} />, router)}

@@ -17,6 +17,9 @@ import AppContext from "AppContext";
 
 function ApplicationMenuButton(): ReactElement {
   const router = useRouter();
+  const { query } = router;
+  console.log(query);
+
   const context = useContext(AppContext);
   const { tags } = context;
 
@@ -27,20 +30,17 @@ function ApplicationMenuButton(): ReactElement {
       return null;
     }
 
-    const navLinkArrangement = [
-      {
+    const navLinkArrangement = tags.map((tag) => {
+      return {
+        label: tag.name,
+        path: `${paths.index}?category=${encodeURIComponent(tag.name)}`
+      }
+    });
+
+    navLinkArrangement.unshift({
       label: 'Home',
       path: paths.index,
-      },
-      {
-      label: 'Clearance',
-      path: `${paths.index}?category=Clearance`,
-      },
-      {
-      label: 'Electronics',
-      path: `${paths.index}?category=Electronics`,
-      },
-    ];
+    });
 
     return (
       <MenuList disablePadding>
@@ -53,7 +53,7 @@ function ApplicationMenuButton(): ReactElement {
               href={path}
               key={label}
               onClick={() => setDrawerOpen(false)}
-              selected={path === router.pathname}
+              selected={query.category === label}
               sx={{ width: 220, py: 2 }}
             >
               <ListItemText primary={label} />
@@ -62,7 +62,7 @@ function ApplicationMenuButton(): ReactElement {
         })}
       </MenuList>
     );
-  }, [tags]);
+  }, [query, tags]);
 
 
   return (
