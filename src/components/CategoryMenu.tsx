@@ -1,57 +1,108 @@
-import { MouseEventHandler, useContext } from 'react';
+import clsx from 'clsx';
+import {
+  MouseEventHandler,
+  SyntheticEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 
-type CategoryMenuProps = MenuListProps & {
-  onMenuItemClick: MouseEventHandler,
-};
+import TreeView, { TreeViewProps } from '@mui/lab/TreeView';
+import TreeItem from '@mui/lab/TreeItem';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-
-import MenuList, { MenuListProps } from '@mui/material/MenuList';
-import ListItemText from "@mui/material/ListItemText";
-import MenuItem from "@mui/material/MenuItem";
 import Link from "./Link";
 
-import { useRouter } from "next/router";
 import paths from "paths";
 import AppContext from 'AppContext';
 
-const CategoryMenu: React.FC<CategoryMenuProps> = ({ onMenuItemClick }) => {
-  const router = useRouter();
-  const { query } = router;
+import classes from './CategoryMenu.module.scss';
 
+import type { Tag } from 'types';
+
+type CategoryMenuProps = TreeViewProps & {
+  onTreeItemClick: MouseEventHandler,
+};
+
+const ALL_ITEMS_TAG:Tag = {
+  id: 0,
+  name: 'All Items',
+  children: [],
+};
+
+function renderTreeItem(tag:Tag, namePrefix:string|null, depth:number, onTreeItemClick:MouseEventHandler) {
+  let fullTagName = tag.name;
+  if (namePrefix) {
+    fullTagName = `${namePrefix}::${fullTagName}`;
+  }
+
+  let href;
+  if (tag.id === ALL_ITEMS_TAG.id) {
+    href = paths.index;
+  } else {
+    href = `${paths.index}?category=${encodeURIComponent(fullTagName)}`;
+  }
+
+  return (
+    <TreeItem
+      key={tag.id}
+      label={(
+        <Link
+          className={clsx(classes.link, classes[`d${depth}Link`])}
+          color="textPrimary"
+          href={href}
+          onClick={onTreeItemClick}
+          underline="hover"
+        >
+          {tag.name}
+        </Link>
+      )}
+      nodeId={`${tag.id}`}
+    >
+      {tag.children.map((childTag) => renderTreeItem(childTag, fullTagName,depth + 1, onTreeItemClick))}
+    </TreeItem>
+  );
+}
+
+
+const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTreeItemClick }) => {
   const context = useContext(AppContext);
   const { tags } = context;
 
-  const navLinkArrangement = tags.map((tag) => {
-    return {
-      label: tag.name,
-      path: `${paths.index}?category=${encodeURIComponent(tag.name)}`
-    }
-  });
+  const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>([]);
 
-  navLinkArrangement.unshift({
-    label: 'Home',
-    path: paths.index,
-  });
+  useEffect(() => {
+    setExpandedNodeIds(tags.map(tag => `${tag.id}`));
+  }, [tags]);
 
+  const handleNodeToggle = useCallback((_: SyntheticEvent, nodeIds: string[]) => {
+    setExpandedNodeIds(nodeIds);
+  }, [onTreeItemClick]);
+
+
+  const treeItems = useMemo(() => {
+    const items = tags.map(
+      (tag) => renderTreeItem(tag, null,1, onTreeItemClick)
+    );
+
+    items.unshift(renderTreeItem(ALL_ITEMS_TAG, null,1, onTreeItemClick));
+
+    return items;
+  }, [tags]);
+  
   return (
-    <MenuList disablePadding>
-      {navLinkArrangement.map((linkInfo) => {
-        const { label, path } = linkInfo;
-
-        return (
-          <MenuItem
-            component={Link}
-            href={path}
-            key={label}
-            onClick={onMenuItemClick}
-            selected={query.category === label}
-            sx={{ width: 220, py: 2 }}
-          >
-            <ListItemText primary={label} />
-          </MenuItem>
-        );
-      })}
-    </MenuList>
+    <TreeView
+      className={classes.treeView}
+      defaultCollapseIcon={<ExpandMoreIcon />}
+      defaultExpandIcon={<ChevronRightIcon />}
+      expanded={expandedNodeIds}
+      onNodeToggle={handleNodeToggle}
+    >
+      {treeItems}
+    </TreeView>
   );
 };
 

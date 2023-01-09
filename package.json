@@ -17,6 +17,7 @@
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
+    "@mui/lab": "latest",
     "@mui/material": "latest",
     "@next/font": "latest",
     "named-urls": "latest",
@@ -37,6 +38,7 @@
     "gh-pages": "latest",
     "react-virtualized-auto-sizer": "latest",
     "sass": "^1.57.1",
-    "typescript": "latest"
+    "typescript": "latest",
+    "typescript-plugin-css-modules": "latest"
   }
 }

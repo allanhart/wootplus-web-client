@@ -11,6 +11,12 @@ declare global {
   }
 }
 
+// For SCSS Modules
+declare module "*.module.scss" {
+  const classes: { [key: string]: string };
+  export default classes;
+}
+
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement, router:NextRouter) => ReactNode,
   pageTitle?: string,
@@ -22,8 +28,9 @@ export interface AppProps extends NextAppProps {
 }
 
 export interface Tag {
+  id: number,
   name: string,
-  full_name: string,
+  children: Tag[],
 }
 
 export interface WootItem {

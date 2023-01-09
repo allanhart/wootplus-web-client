@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer';
 import CategoryMenu from "./CategoryMenu";
 
 function ApplicationMenuButton(): ReactElement {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(true);
 
   const handleCategoryMenuItemClick = useCallback(() => {
     setDrawerOpen(false);
@@ -24,15 +24,17 @@ function ApplicationMenuButton(): ReactElement {
       </IconButton>
 
       <Drawer
+        keepMounted
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         PaperProps={{
           sx: {
             paddingTop: { xs: 7, sm: 8 },
+            paddingBottom: 6,
           },
         }}
       >
-        {<CategoryMenu onMenuItemClick={handleCategoryMenuItemClick} />}
+        {<CategoryMenu onTreeItemClick={handleCategoryMenuItemClick} />}
       </Drawer>
     </>
   );
