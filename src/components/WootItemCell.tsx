@@ -8,6 +8,7 @@ import ButtonBase from "@mui/material/ButtonBase";
 import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 
+import { toCurrency } from 'util/transformers';
 
 // -----------------------------------------------------------------------------
 function WootItemPlaceholder():ReactElement {
@@ -68,7 +69,7 @@ function WootItemView({ wootItem }: { wootItem: WootItem }):ReactElement {
         </Typography>
 
         <Typography variant="body2" color="text.secondary">
-          ${min_price}
+          {toCurrency(min_price)}
         </Typography>
       </Box>
     </>
