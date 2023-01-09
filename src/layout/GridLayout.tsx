@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 import Head from "next/head";
 
 import Container from "@mui/material/Container";
-import { Breakpoint } from '@mui/system';
 
 import ApplicationBar from "components/ApplicationBar";
 import ApplicationFooter from "components/ApplicationFooter";
@@ -11,12 +10,10 @@ import ApplicationFooter from "components/ApplicationFooter";
 export default function DefaultLayout(
   {
     children,
-    maxContainerWidth = 'lg',
     pageTitle,
     toolbarItems = undefined,
   }: {
     children: ReactElement,
-    maxContainerWidth?: Breakpoint | false,
     pageTitle: string,
     toolbarItems?: ReactElement | undefined,
 }) {
@@ -28,24 +25,28 @@ export default function DefaultLayout(
       </Head>
 
       <ApplicationBar
-        hideOnScroll
-        maxContainerWidth={maxContainerWidth}
+        hideOnScroll={false}
+        maxContainerWidth={false}
         toolbarItems={toolbarItems}
       />
 
       <Container
         component="main"
-        maxWidth={maxContainerWidth}
+        maxWidth={false}
         disableGutters
         sx={{
           pt: { xs: 7, sm: 8 },
           pb: 6,
+          width: '100vw',
+          height: '100vh',
         }}
       >
         {children}
       </Container>
 
-      <ApplicationFooter hideOnScroll />
+      <ApplicationFooter
+        hideOnScroll={false}
+      />
     </>
   );
 }

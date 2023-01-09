@@ -10,7 +10,7 @@ import { FixedSizeGrid } from "react-window";
 // import paths from 'paths';
 
 import AppContext from "AppContext";
-import DefaultLayout from 'layout/DefaultLayout';
+import GridLayout from 'layout/GridLayout';
 
 import WootItemCell from 'components/WootItemCell';
 import WootItemFilterView from 'components/WootItemFilterView';
@@ -159,19 +159,15 @@ WootItemListPage.getLayout = (page:ReactElement, router:NextRouter) => {
   }
 
   return (
-    <DefaultLayout
-      maxContainerWidth={false}
-      layout="absolute"
+    <GridLayout
       pageTitle={pageTitle}
       toolbarItems={(
         <WootItemFilterView />
       )}
     >
       {page}
-    </DefaultLayout>
+    </GridLayout>
   );
 };
-
-
 
 export default WootItemListPage;
