@@ -7,7 +7,7 @@ import ApplicationBar from "components/ApplicationBar";
 import ApplicationFooter from "components/ApplicationFooter";
 
 
-export default function DefaultLayout(
+function GridLayout(
   {
     children,
     pageTitle,
@@ -49,3 +49,5 @@ export default function DefaultLayout(
     </>
   );
 }
+
+export default GridLayout;
