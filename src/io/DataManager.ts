@@ -53,6 +53,7 @@ class DataManager {
       throw new Error(`Invalid response from URL: ${url}`);
     }
 
+
     return await response.json();
   }
 

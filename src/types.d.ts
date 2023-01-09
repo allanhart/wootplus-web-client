@@ -34,7 +34,7 @@ export interface Tag {
 }
 
 export interface WootItem {
-  category: string,
+  categories: string[],
   condition: string,
   date_end: string,
   date_start: string,

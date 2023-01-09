@@ -60,7 +60,7 @@ export const loadWootItems = (
     }
 
     if (query.category) {
-      const categoryPattern = `^${query.category as string}`;
+      const categoryPattern = `${query.category as string}`;
       filterParams.categories = new RegExp(categoryPattern, 'ig');
     }
 
