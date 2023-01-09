@@ -4,6 +4,9 @@ import { useCallback, useState } from "react";
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 
+import { Theme } from '@mui/system';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 import DefaultLayout from 'layout/DefaultLayout';
 
 import { fetchTags } from "io/queries";
@@ -15,6 +18,8 @@ export default function Application(props: AppProps) {
   const { Component, pageProps } = props;
 
   const router = useRouter();
+  const isLargeUp = useMediaQuery((theme:Theme) => theme.breakpoints.up('lg'));
+
   const [loadProgress, setLoadProgress] = useState(null);
 
   const tagFetchResult = useQuery(['fetchTags'], fetchTags);
@@ -43,6 +48,7 @@ export default function Application(props: AppProps) {
 
   return (
     <AppContext.Provider value={{
+      isLargeUp,
       loadProgress,
       tags: tagFetchResult.data || [],
       update: updateAppContext,

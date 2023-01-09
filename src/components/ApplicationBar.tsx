@@ -47,12 +47,12 @@ function PersistentAppBar({ children, scrollTarget }: {
 
 export default function ApplicationBar(
   {
-    hideOnScroll,
+    hideOnScroll = false,
     maxContainerWidth,
     scrollTarget = undefined,
     toolbarItems = undefined,
 }: {
-    hideOnScroll: boolean,
+    hideOnScroll?: boolean,
     maxContainerWidth?: Breakpoint|false,
     scrollTarget?: Node|Window|undefined,
     toolbarItems?: ReactElement | undefined,

@@ -42,10 +42,10 @@ function PersistentFooter({ children, scrollTarget = undefined }: {
 }
 
 export default function ApplicationFooter({
-  hideOnScroll,
+  hideOnScroll = false,
   scrollTarget = undefined
 }: {
-  hideOnScroll: boolean,
+  hideOnScroll?: boolean,
   scrollTarget?: Node|Window|undefined,
 }): ReactElement {
   let view = (

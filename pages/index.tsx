@@ -6,9 +6,6 @@ import { useQuery } from 'react-query';
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
 
-// import Link from 'components/Link';
-// import paths from 'paths';
-
 import AppContext from "AppContext";
 import GridLayout from 'layout/GridLayout';
 
@@ -135,9 +132,6 @@ function WootItemListPage() {
               columnCount,
               rowCount,
               items: isReady ? wootItems : null,
-              // onCellClick,
-              // onCellDidMount: handleCellDidMount,
-              // onCellWillUnmount: handleCellWillUnmount,
             }}
             rowCount={rowCount}
             rowHeight={cellWidth + 64}
