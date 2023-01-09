@@ -74,7 +74,7 @@ class DataManager {
     });
   }
 
-  public loadWootItems(filterParams:Object, orderingParams:Object) {
+  public loadWootItems(filterParams:Object, optionsParams:Object) {
     return new Promise<WootItem[]>((resolve, reject) => {
       const itemCollection = this.db.collection("woot-items", {
         primaryKey: 'uuid',
@@ -85,7 +85,7 @@ class DataManager {
           return reject(err);
         }
 
-        const loadedItems = itemCollection.find(filterParams, orderingParams);
+        const loadedItems = itemCollection.find(filterParams, optionsParams);
         resolve(loadedItems);
       });
     });
