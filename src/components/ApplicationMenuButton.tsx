@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer';
 import CategoryMenu from "./CategoryMenu";
 
 function ApplicationMenuButton(): ReactElement {
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleCategoryMenuItemClick = useCallback(() => {
     setDrawerOpen(false);

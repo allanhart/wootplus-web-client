@@ -60,7 +60,7 @@ class DataManager {
   public saveWootItems(wootItems:WootItem[]):Promise<boolean> {
     return new Promise((resolve, reject) => {
       const itemCollection = this.db.collection("woot-items", {
-        primaryKey: 'uuid',
+        primaryKey: 'id',
       });
 
       itemCollection.insert(wootItems, () => {
@@ -78,7 +78,7 @@ class DataManager {
   public loadWootItems(filterParams:Object, optionsParams:Object) {
     return new Promise<WootItem[]>((resolve, reject) => {
       const itemCollection = this.db.collection("woot-items", {
-        primaryKey: 'uuid',
+        primaryKey: 'id',
       });
 
       itemCollection.load((err:Error) => {

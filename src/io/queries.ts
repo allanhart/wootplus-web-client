@@ -23,14 +23,17 @@ export const fetchTags = (): Promise<Tag[]> => {
  */
 export const syncWootItems = (
   params: QueryFunctionContext<[string, { url: string }]>
-): Promise<boolean|Error> => {
+): Promise<boolean> => {
   // We can destructure `param.queryKey`:
   //  - first item is the query key.
   //  - second item is the object containing properties passed from the React component.
   const [, { url }] = params.queryKey;
 
   return new Promise((resolve, reject) => {
-    // Update the internal database with the retrieved items
+    // TODO: Use timestamp to determine if a sync is required
+    // return resolve(true);
+
+    // Fetch an updated list of feed items and store them locally
     const dataManager = DataManager.getInstance();
     dataManager.fetchWootItems(url).then((wootItems) => {
       dataManager.saveWootItems(wootItems).then(resolve).catch(reject);

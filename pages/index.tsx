@@ -36,7 +36,6 @@ function WootItemListPage() {
   const syncResult = useQuery(['syncWootItems', {
     url: apiUrl(`/feed-items/`),
   }], syncWootItems, {
-    // enabled: !!category,
     // useErrorBoundary: true,
   });
 
