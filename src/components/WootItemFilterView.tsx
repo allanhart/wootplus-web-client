@@ -1,7 +1,11 @@
-import { ChangeEvent, useCallback } from 'react';
+import {ChangeEvent, MouseEventHandler, useCallback} from 'react';
 import { useRouter } from 'next/router';
 
+import Box from '@mui/material/Box';
+
 import SearchField from "./SearchField";
+
+const SEARCH_FIELD_NAME = 'title';
 
 function WootItemFilterView({ baseParams = {} }: {
   baseParams?: Record<string, string>
@@ -19,15 +23,25 @@ function WootItemFilterView({ baseParams = {} }: {
   }, [baseParams, query, replace]);
 
   const handleSearchFieldTimeout = useCallback((e:ChangeEvent<HTMLInputElement>) => {
-    updateQueryParams(e.target.name, e.target.value);
+    updateQueryParams(SEARCH_FIELD_NAME, e.target.value);
   }, [updateQueryParams, query]);
 
+  const handleSearchFieldClear:MouseEventHandler = useCallback((e) => {
+    console.log(e);
+
+    updateQueryParams(SEARCH_FIELD_NAME, '');
+  }, [updateQueryParams, query]);
+
+
   return (
-    <SearchField
-      name='title'
-      onTimeout={handleSearchFieldTimeout}
-      value={query.title as string || ''}
-    />
+    <Box ml={1}>
+      <SearchField
+        name={SEARCH_FIELD_NAME}
+        onTimeout={handleSearchFieldTimeout}
+        onClear={handleSearchFieldClear}
+        value={query.title as string || ''}
+      />
+    </Box>
   );
 }
 

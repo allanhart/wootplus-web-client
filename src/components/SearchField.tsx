@@ -1,51 +1,38 @@
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  MouseEvent,
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
+import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
+import InputAdornment from '@mui/material/InputAdornment';
 import { styled } from '@mui/material/styles';
+import CloseIcon from '@mui/icons-material/Close';
 
 import { debounce } from '@mui/material/utils';
 import SearchIcon from '@mui/icons-material/Search';
 
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
   backgroundColor: theme.palette.common.white,
-  '&:hover': {
-    // backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
+  borderRadius: theme.shape.borderRadius,
+  color: 'inherit',
+  padding: theme.spacing(0.5, 0.5, 0.5, 1),
+
   width: '100%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
+    width: 220,
   },
-}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 1.5),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
   '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
+    // padding: theme.spacing(1, 1, 1, 0),
+    // width: '100%',
   },
 }));
 
@@ -53,14 +40,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function SearchField({
   name,
   onChange,
+  onClear,
   onTimeout,
   placeholder = 'Search...',
   timeoutDelay = 300,
   value,
 }: {
   name?: string,
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void,
-  onTimeout?: (e:ChangeEvent<HTMLInputElement>) => void,
+  onChange?: ChangeEventHandler<HTMLInputElement> | undefined,
+  onClear?: MouseEventHandler<HTMLButtonElement> | undefined;
+  onTimeout?: ChangeEventHandler<HTMLInputElement> | undefined,
   placeholder?: string,
   timeoutDelay?: number,
   value: string,
@@ -91,19 +80,35 @@ function SearchField({
     }
   };
 
+  const handleClearButtonClick = (e:MouseEvent<HTMLButtonElement>) => {
+    setFieldValue('');
+
+    if (onClear) {
+      onClear(e);
+    }
+  };
+
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        inputProps={{ 'aria-label': 'search' }}
-        name={name}
-        onChange={handleInputChange}
-        placeholder={placeholder}
-        value={fieldValue}
-      />
-    </Search>
+    <StyledInputBase
+      inputProps={{ 'aria-label': 'search' }}
+      name={name}
+      onChange={handleInputChange}
+      startAdornment={(
+        <InputAdornment position="start">
+          <SearchIcon />
+        </InputAdornment>
+      )}
+      endAdornment={fieldValue ? (
+        <IconButton
+          size="small"
+          onClick={handleClearButtonClick}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+      placeholder={placeholder}
+      value={fieldValue}
+    />
   );
 }
 

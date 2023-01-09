@@ -1,10 +1,9 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { NextRouter, useRouter } from "next/router";
 
-import { useQuery } from 'react-query';
-
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
+import { useQuery } from 'react-query';
 
 import AppContext from "AppContext";
 import GridLayout from 'layout/GridLayout';
@@ -91,7 +90,7 @@ function WootItemListPage() {
       colCount = 5;
     } else if (gridWidth > 768) {
       colCount = 4;
-    } else if (gridWidth > 414) {
+    } else if (gridWidth > 600) {
       colCount = 3;
     } else {
       colCount = 2;
@@ -151,6 +150,8 @@ WootItemListPage.getLayout = (page:ReactElement, router:NextRouter) => {
   if (category) {
     pageTitle = `${pageTitle} | ${category}`;
   }
+
+  console.log(category);
 
   return (
     <GridLayout
