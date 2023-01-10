@@ -26,15 +26,13 @@ function WootItemFilterView({ baseParams = {} }: {
     updateQueryParams(SEARCH_FIELD_NAME, e.target.value);
   }, [updateQueryParams, query]);
 
-  const handleSearchFieldClear:MouseEventHandler = useCallback((e) => {
-    console.log(e);
-
+  const handleSearchFieldClear:MouseEventHandler = useCallback(() => {
     updateQueryParams(SEARCH_FIELD_NAME, '');
   }, [updateQueryParams, query]);
 
 
   return (
-    <Box ml={1}>
+    <Box ml={1} width="100%">
       <SearchField
         name={SEARCH_FIELD_NAME}
         onTimeout={handleSearchFieldTimeout}

@@ -29,11 +29,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     width: 220,
   },
-
-  '& .MuiInputBase-input': {
-    // padding: theme.spacing(1, 1, 1, 0),
-    // width: '100%',
-  },
 }));
 
 

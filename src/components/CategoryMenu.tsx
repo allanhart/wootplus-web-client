@@ -1,12 +1,8 @@
 import clsx from 'clsx';
 import {
   MouseEventHandler,
-  SyntheticEvent,
-  useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState
 } from 'react';
 
 import TreeView, { TreeViewProps } from '@mui/lab/TreeView';
@@ -31,6 +27,7 @@ const ALL_ITEMS_TAG:Tag = {
   id: 0,
   name: 'All Items',
   children: [],
+  item_count: null,
 };
 
 function renderTreeItem(tag:Tag, namePrefix:string|null, depth:number, onTreeItemClick:MouseEventHandler) {
@@ -46,6 +43,11 @@ function renderTreeItem(tag:Tag, namePrefix:string|null, depth:number, onTreeIte
     href = `${paths.index}?category=${encodeURIComponent(fullTagName)}`;
   }
 
+  let label = tag.name;
+  if (tag.item_count) {
+    label = `${label} (${tag.item_count})`;
+  }
+
   return (
     <TreeItem
       key={tag.id}
@@ -57,7 +59,7 @@ function renderTreeItem(tag:Tag, namePrefix:string|null, depth:number, onTreeIte
           onClick={onTreeItemClick}
           underline="hover"
         >
-          {tag.name}
+          {label}
         </Link>
       )}
       nodeId={`${tag.id}`}
@@ -71,17 +73,6 @@ function renderTreeItem(tag:Tag, namePrefix:string|null, depth:number, onTreeIte
 const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTreeItemClick }) => {
   const context = useContext(AppContext);
   const { tags } = context;
-
-  const [expandedNodeIds, setExpandedNodeIds] = useState<string[]>([]);
-
-  useEffect(() => {
-    setExpandedNodeIds(tags.map(tag => `${tag.id}`));
-  }, [tags]);
-
-  const handleNodeToggle = useCallback((_: SyntheticEvent, nodeIds: string[]) => {
-    setExpandedNodeIds(nodeIds);
-  }, [onTreeItemClick]);
-
 
   const treeItems = useMemo(() => {
     const items = tags.map(
@@ -98,8 +89,6 @@ const CategoryMenu: React.FC<CategoryMenuProps> = ({ onTreeItemClick }) => {
       className={classes.treeView}
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
-      expanded={expandedNodeIds}
-      onNodeToggle={handleNodeToggle}
     >
       {treeItems}
     </TreeView>

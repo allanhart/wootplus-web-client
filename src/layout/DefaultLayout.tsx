@@ -10,12 +10,12 @@ import ApplicationFooter from "components/ApplicationFooter";
 
 export default function DefaultLayout(
   {
-    children,
+    page,
     maxContainerWidth = 'lg',
     pageTitle,
     toolbarItems = undefined,
   }: {
-    children: ReactElement,
+    page: ReactElement,
     maxContainerWidth?: Breakpoint | false,
     pageTitle: string,
     toolbarItems?: ReactElement | undefined,
@@ -42,7 +42,7 @@ export default function DefaultLayout(
           pb: 6,
         }}
       >
-        {children}
+        {page}
       </Container>
 
       <ApplicationFooter hideOnScroll />

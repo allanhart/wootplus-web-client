@@ -31,6 +31,7 @@ export interface Tag {
   id: number,
   name: string,
   children: Tag[],
+  item_count: number | null,
 }
 
 export interface WootItem {

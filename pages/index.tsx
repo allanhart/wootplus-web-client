@@ -1,5 +1,8 @@
-import { ReactElement, useContext, useEffect, useState } from 'react';
+import { ReactElement, useContext, useEffect, useMemo, useState } from 'react';
 import { NextRouter, useRouter } from "next/router";
+
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
 
 import AutoSizer, { Size } from "react-virtualized-auto-sizer";
 import { FixedSizeGrid } from "react-window";
@@ -19,6 +22,7 @@ const INITIAL_ROW_COUNT = 32;
 
 function WootItemListPage() {
   const { query } = useRouter();
+  const category = query.category as string;
 
   const context = useContext(AppContext);
   const updateContext = context?.update;
@@ -111,36 +115,57 @@ function WootItemListPage() {
   }, [columnCount, isReady, wootItems]);
 
   // ---------------------------------------------------------------------------
+  const toolbar = useMemo(() => {
+    console.log(category);
+
+    return (
+      <Toolbar
+        variant="dense"
+        sx={{
+          backgroundColor: 'grey.100',
+          borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
+        }}
+      >
+        All Items
+      </Toolbar>
+    );
+  }, [category]);
+
   if (loadResult.isError) {
     return "Error retrieving data";
   }
 
   return (
-    <AutoSizer onResize={setViewSize}>
-      {({ height, width }) => {
-        if (!(columnCount && cellWidth)) {
-          return null;
-        }
+    <Box width="100%" height="100%" display="flex" flexDirection="column">
+      {toolbar}
+      <Box flex={1}>
+        <AutoSizer onResize={setViewSize}>
+          {({ height, width }) => {
+            if (!(columnCount && cellWidth)) {
+              return null;
+            }
 
-        return (
-          <FixedSizeGrid
-            columnCount={columnCount}
-            columnWidth={cellWidth}
-            height={height}
-            itemData={{
-              columnCount,
-              rowCount,
-              items: isReady ? wootItems : null,
-            }}
-            rowCount={rowCount}
-            rowHeight={cellWidth + 64}
-            width={width}
-          >
-            {WootItemCell}
-          </FixedSizeGrid>
-        );
-      }}
-    </AutoSizer>
+            return (
+              <FixedSizeGrid
+                columnCount={columnCount}
+                columnWidth={cellWidth}
+                height={height}
+                itemData={{
+                  columnCount,
+                  rowCount,
+                  items: isReady ? wootItems : null,
+                }}
+                rowCount={rowCount}
+                rowHeight={cellWidth + 64}
+                width={width}
+              >
+                {WootItemCell}
+              </FixedSizeGrid>
+            );
+          }}
+        </AutoSizer>
+      </Box>
+    </Box>
   );
 }
 
@@ -150,8 +175,6 @@ WootItemListPage.getLayout = (page:ReactElement, router:NextRouter) => {
   if (category) {
     pageTitle = `${pageTitle} | ${category}`;
   }
-
-  console.log(category);
 
   return (
     <GridLayout

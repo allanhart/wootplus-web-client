@@ -50,7 +50,7 @@ function WootItemView({ wootItem }: { wootItem: WootItem }):ReactElement {
           component="img"
           src={photo_url}
           sx={{
-            height: 'auto',
+            height: '100%',
             width: '100%',
             objectFit: 'contain',
           }}

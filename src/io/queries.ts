@@ -56,15 +56,16 @@ export const loadWootItems = (
   return new Promise((resolve, reject) => {
     const filterParams:Record<string, Object> = {
       // list_price_max: { "$gt": 100 },
+      // id: '037434de-c94f-40d8-9806-0adbeb72351a',
     };
 
     if (query.title) {
-      filterParams.title = new RegExp(query.title as string, 'ig');
+      filterParams.title = new RegExp(query.title as string, 'i');
     }
 
     if (query.category) {
       const categoryPattern = `${query.category as string}`;
-      filterParams.categories = new RegExp(categoryPattern, 'ig');
+      filterParams.categories = new RegExp(categoryPattern, 'i');
     }
 
     const optionsParams:Object = {

@@ -33,7 +33,6 @@ function GridLayout(
         component="main"
         sx={{
           position: 'fixed',
-          overflow: 'auto',
           top: {
             xs: 56, sm: 64,
           },

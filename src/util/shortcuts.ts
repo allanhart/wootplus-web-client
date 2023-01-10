@@ -25,3 +25,13 @@ export function getScrollbarWidth() {
 export function apiUrl(endpoint:string): string {
   return process.env.NEXT_PUBLIC_API_URL_PREFIX + endpoint;
 }
+
+export function strToHslColor(str:string, s:number, l:number):string {
+  let hash = 0;
+  for (let i = 0, n = str.length; i < n; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  return `hsl(${hash % 360}, ${s}%, ${l}%)`;
+}
+
